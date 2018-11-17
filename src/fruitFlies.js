@@ -5,6 +5,16 @@ import { BASE_TEN, NUM_FRUIT_FLIES, SQUARED_POWER } from './config';
 export class FruitFlies {
   
   /**
+   * @property food
+   * @type {Food}
+   * @description The desired food object.
+   * @access public
+   */
+  get food() {
+    return this._food;
+  }
+  
+  /**
    * @property fruitFlies
    * @type {[FruitFly]}
    * @description An array of FruitFlies.
@@ -27,23 +37,14 @@ export class FruitFlies {
   /**
    * @constructor
    *
+   * @param {Food} food - The desired food object.
    * @param {number} numFruitFlies - The number of fruit flies to be created.
    *                               - Defaults to NUM_FRUIT_FLIES.
    */
-  constructor(numFruitFlies = NUM_FRUIT_FLIES) {
+  constructor(food, numFruitFlies = NUM_FRUIT_FLIES) {
+    this._food = food;
     this._fruitFlies = [];
     this._generateFruitFlies(numFruitFlies);
-  }
-  
-  /**
-   * Calculate the distance to the food.
-   *
-   * @param {Food} food
-   */
-  calculateSmellConcentration(food) {
-    this.fruitFlies.forEach((fruitFly) => {
-      fruitFly.calculateSmellConcentration(food);
-    });
   }
   
   /**
@@ -52,41 +53,23 @@ export class FruitFlies {
    * @return {FruitFly} - The fruit fly with the best position.
    */
   findBestPosition() {
-    const fruitFlies = this.fruitFlies.map((fruitFly) => {
-      fruitFly.fx = Math.pow(fruitFly.smellConcentration, SQUARED_POWER);
-      return fruitFly;
-    });
-
-    return fruitFlies.reduce((min, fruitFly) => {
-      if (typeof min.fx === 'undefined') return fruitFly;
-
-      return (fruitFly.fx < min.fx ? fruitFly : min);
-    }, { fx: undefined });
-  }
-
-  /**
-   * Find the FruitFly closest to the food.
-   *
-   * @returns {FruitFly}
-   * @access public
-   */
-  findFruitFlyGreatestSmellConcentration() {
     return this.fruitFlies.reduce((max, fruitFly) => {
       if (typeof max.smellConcentration === 'undefined') return fruitFly;
 
-      return (fruitFly.smellConcentration > max.smellConcentration ? fruitFly : max);
+      const fruitFlyFx = Math.pow(fruitFly.smellConcentration, SQUARED_POWER);
+      const maxFx = Math.pow(max.smellConcentration, SQUARED_POWER);
+
+      return (fruitFlyFx > maxFx ? fruitFly : max);
     }, { smellConcentration: undefined });
   }
-  
+
   /**
    * Perform the smell phase upon each fruit fly.
    *
    * @param {FruitFly} bestPosition - The fuit fly with the best position.
    */
-  smell(bestPosition) {
-    this.fruitFlies.forEach((fruitFly) => {
-      fruitFly.smell(bestPosition);
-    });
+  smell() {
+    this.fruitFlies.forEach(fruitFly => fruitFly.smell());
   }
 
   /**
@@ -107,7 +90,7 @@ export class FruitFlies {
    */
   _generateFruitFlies(numFruitFlies) {
     for (var i = 0; i < numFruitFlies; i++) {
-      this._fruitFlies[i] = new FruitFly(i);
+      this._fruitFlies[i] = new FruitFly(i, this.food);
     }
   }
 }

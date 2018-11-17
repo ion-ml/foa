@@ -21,13 +21,13 @@ export class FruitFly {
   }
 
   /**
-   * @property smellConcentration
-   * @type {number}
-   * @description The 'distance' from the current FruitFly to the food.
+   * @property food
+   * @type {Food}
+   * @description The desired food object.
    * @access public
    */
-  get smellConcentration() {
-    return this._smellConcentration || DISTANCE_TO_FOOD_DEFAULT;
+  get food() {
+    return this._food;
   }
 
   /**
@@ -46,7 +46,7 @@ export class FruitFly {
    * @description An Object representing the last best coordinates of the current fruit fly.
    * @access public
    */
-  get lastBestCoordinates() {
+  get lastBestPosition() {
     return this._lastBestPosition;
   }
 
@@ -61,6 +61,16 @@ export class FruitFly {
   }
 
   /**
+   * @property smellConcentration
+   * @type {number}
+   * @description The 'distance' from the current FruitFly to the food.
+   * @access public
+   */
+  get smellConcentration() {
+    return this._smellConcentration || DISTANCE_TO_FOOD_DEFAULT;
+  }
+
+  /**
    * @property upperBound
    * @type {number}
    * @description The upper bound of the X dimension.
@@ -72,52 +82,37 @@ export class FruitFly {
 
   /**
    * @constructor
+   *
    * @param {number} index - The identifying number of the current FruitFly.
+   * @param {Food} food - The desired food object.
+   * @param {Object<string, number>} coordinates - Pre-defined coordinates. Defaults to null.
+   * @param {number} lowerBound - The lower bound width. Default to WIDTH_LOWER_BOUND.
+   * @param {number} upperBound - The upper bound width. Defaults to WIDTH_UPPER_BOUND. 
+   *
    * @access public
    */
   constructor(
     index,
+    food,
+    coordinates = null,
     lowerBound = WIDTH_LOWER_BOUND,
-    upperBound = WIDTH_UPPER_BOUND
+    upperBound = WIDTH_UPPER_BOUND,
   ) {
-    this._smellConcentration = 0;
+    this._food = food;
     this._index = index;
     this._lowerBound = lowerBound;
+    this._smellConcentration = 0;
     this._upperBound = upperBound;
 
-    this._updateCoordinates(
-      this._generateStartingCoordinates()
-    );
-  }
+    if (coordinates === null) {
+      this._updateCoordinates(
+        this._generateStartingCoordinates()
+      );
+    } else {
+      this._updateCoordinates(coordinates);
+    }
 
-  /**
-   * Calculates the distance between the current FruitFly and the food.
-   *
-   * @param {Food} food - A class that contains the coordinates of the food.
-   * @returns {null}
-   * @access public
-   */
-  calculateSmellConcentration(food) {
-    let smellConcentration;
-    const { coordinates } = food;
-    const { x: xFood, y: yFood } = coordinates;
-    const { x: xCurrent, y: yCurrent } = this.coordinates;
-
-    const xDiffSquared = Math.pow(
-      (xCurrent - xFood),
-      SQUARED_POWER
-    );
-
-    const yDiffSquared = Math.pow(
-      (yCurrent - yFood),
-      SQUARED_POWER
-    );
-
-    const total = xDiffSquared + yDiffSquared;
-    const distance = Math.pow(total, ROOT_POWER);
-    const inverseDistance = 1 / distance;
-
-    this._smellConcentration = inverseDistance;
+    this._lastBestPosition = Object.assign({}, this.coordinates);
   }
 
   /**
@@ -130,9 +125,8 @@ export class FruitFly {
    * @access public
    * @since 0.1
    */
-  smell(food) {
-    const { coordinates: lastBestCoordinates } = this.lastBestPosition;
-    const { x: xLastBest, y: yLastBest } = lastBestCoordinates;
+  smell() {
+    const { x: xLastBest, y: yLastBest } = this.lastBestPosition;
     const { x: xCurrent, y: yCurrent } = this.coordinates;
 
     const xDiff = xCurrent - xLastBest;
@@ -167,17 +161,8 @@ export class FruitFly {
     };
 
     this._updateCoordinates(updatedCoordinates);
-
-    /*
-    this.lastBestPostion.calculateSmellConcentration(food);
-    this.calculateSmellConcentration(food);
-
-    if (this.smellConcentration > this.lastBestPosition.smellConcentration) {
-      this._lastBestPosition = Object.assign({}, this);
-    }
-    */
   }
-
+  
   /**
    * A protected method that generates the starting coordinates of the FruitFly.
    *
@@ -194,7 +179,53 @@ export class FruitFly {
     };
   }
 
+  /**
+   * A protected method that may be called to update the coordinates of the fruit fly.
+   *
+   * @param {Object<string, number>} coordinates - The coordinates to be used to update the fruit fly.
+   * @access protected.
+   */
   _updateCoordinates(coordinates) {
-    this._coordinates = coordinates; 
+    this._coordinates = coordinates;
+    this._updateSmellConcentration(this.food);
+  }
+
+  _updateLastBestPosition() {
+    const lastBestFruitFly = new FruitFly(
+      this.index,
+      this.lastBestPosition
+    );
+    
+    if (this.smellConcentration > lastBestFruitFly.smellConcentration) {
+      this._lastBestPosition = this.coordinates;
+    }
+  }
+  
+  /**
+   * Calculates the distance between the current FruitFly and the food.
+   *
+   * @access public
+   */
+  _updateSmellConcentration() {
+    let smellConcentration;
+    const { coordinates } = this.food;
+    const { x: xFood, y: yFood } = coordinates;
+    const { x: xCurrent, y: yCurrent } = this.coordinates;
+
+    const xDiffSquared = Math.pow(
+      (xCurrent - xFood),
+      SQUARED_POWER
+    );
+
+    const yDiffSquared = Math.pow(
+      (yCurrent - yFood),
+      SQUARED_POWER
+    );
+
+    const total = xDiffSquared + yDiffSquared;
+    const distance = Math.pow(total, ROOT_POWER);
+    const inverseDistance = 1 / distance;
+
+    this._smellConcentration = inverseDistance;
   }
 }

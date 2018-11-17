@@ -5,11 +5,11 @@ import { Swarm } from '../src/swarm';
 
 describe('Swarm', function() {
   it(`should be instantiated with the coordinates of the bestPosition`, () => {
-    const numFruitFlies = 10;
+    const numFruitFlies = 5;
     const food = new Food();
-    const fruitFlies = new FruitFlies(numFruitFlies);
-    const bestPosition = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
-    
+    const fruitFlies = new FruitFlies(food, numFruitFlies);
+    const bestPosition = fruitFlies.findBestPosition();
+
     const { coordinates: coordinatesBest } = bestPosition;
     const { x: xBest, y: yBest } = coordinatesBest;
 

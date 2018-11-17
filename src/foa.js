@@ -29,7 +29,7 @@ export const foa = (
 
   for (var i = 0; i < numIterations; i++) {
     results[i] = {
-      smell: smell(food, fruitFlies),
+      smell: smell(fruitFlies),
       vision: vision(food, fruitFlies, swarm),
     };
   }
@@ -47,10 +47,8 @@ export const foa = (
  *
  * @returns {Object}
  */
-export const smell = (food, fruitFlies) => {
-  fruitFlies.calculateSmellConcentration(food);
-  fruitFlies.smell(food);
-  
+export const smell = (fruitFlies) => {
+  fruitFlies.smell();
   const { fruitFlies: fruitFlyInstances } = fruitFlies;
 
   return { fruitFlies: fruitFlyInstances };
@@ -81,9 +79,8 @@ export const trial = (
 
   for (var i = 0; i < numTrials; i++) {
     food = new Food();
-    fruitFlies = new FruitFlies(numFruitFlies);
-    fruitFlies.calculateSmellConcentration(food);
-    bestPosition = fruitFlies.findBestPosition(food);
+    fruitFlies = new FruitFlies(food, numFruitFlies);
+    bestPosition = fruitFlies.findBestPosition();
     swarm = new Swarm(bestPosition);
 
     results[i] = foa(food, fruitFlies, swarm, numIterations);
@@ -104,11 +101,10 @@ export const trial = (
  * @returns {[]}
  */
 export const vision = (food, fruitFlies, swarm) => {
-  fruitFlies.calculateSmellConcentration(food);
   const bestPosition = fruitFlies.findBestPosition(food);
-  const { distanceToFood } = bestPosition;
+  const { smellConcentration } = bestPosition;
 
   swarm.vision(bestPosition);
 
-  return { bestPosition, distanceToFood, food, fruitFlies, swarm };
+  return { bestPosition, food, fruitFlies, smellConcentration, swarm };
 };

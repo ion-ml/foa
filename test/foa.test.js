@@ -9,8 +9,8 @@ describe('foa', function() {
     it('should return results containing an object for each iterations', () => {
       const food = new Food();
       const numFruitFlies = 3;
-      const fruitFlies = new FruitFlies(numFruitFlies);
-      const bestPosition = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
+      const fruitFlies = new FruitFlies(food, numFruitFlies);
+      const bestPosition = fruitFlies.findBestPosition(food);
       const swarm = new Swarm(bestPosition);
       const numIterations = 100;
       const results = foa(food, fruitFlies, swarm, numIterations);
@@ -24,14 +24,12 @@ describe('foa', function() {
       // Arrange
       const food = new Food();
       const numFruitFlies = 3;
-      const fruitFlies = new FruitFlies(numFruitFlies);
+      const fruitFlies = new FruitFlies(food, numFruitFlies);
 
       // Act
-      const results = smell(food, fruitFlies);
+      const { fruitFlies: updatedFruitFlies } = smell(fruitFlies);
 
       // Assert
-      const { fruitFlies: updatedFruitFlies } = results;
-
       updatedFruitFlies.forEach((fruitFly) => {
         const { coordinates } = fruitFly;
         const { x, y } = coordinates;
@@ -47,8 +45,8 @@ describe('foa', function() {
       // Arrange
       const food = new Food();
       const numFruitFlies = 3;
-      const fruitFlies = new FruitFlies(numFruitFlies);
-      const bestPosition = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
+      const fruitFlies = new FruitFlies(food, numFruitFlies);
+      const bestPosition = fruitFlies.findBestPosition(food);
       const swarm = new Swarm(bestPosition);
 
       // Act

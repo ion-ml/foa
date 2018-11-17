@@ -10,49 +10,29 @@ describe('FruitFly', function() {
   const lowerBound = 0;
   const upperBound = 40;
 
-  describe('calculateSmellConcentration', () => {
-    it('should return the distance between the fruitFly and the food (based on a 3, 4 5 triangle)', () => {
-      const fruitFly = new FruitFly(index);
+  describe('constructor', () => {
+    const x = Math.floor(Math.random() * 61);
+    const y = Math.floor(Math.random() * 34);
 
-      fruitFly._coordinates = {
-        x: 1,
-        y: 1,
-      };
+    const preDefinedCoordinates = { x, y };
+    const index = 10;
 
-      const food = {
-        coordinates: {
-          x: 4,
-          y: 5,
-        },
-      };
-
-      fruitFly.calculateSmellConcentration(food);
-      assert.equal(fruitFly.smellConcentration, 0.2);
-    });
-
-    it('should return the distance based on a 3, 4 5 triangle moved along X', () => {
-      const fruitFly = new FruitFly(index);
-
-      fruitFly._coordinates = {
-        x: 3,
-        y: 1,
-      };
-
-      const food = {
-        coordinates: {
-          x: 6,
-          y: 5,
-        },
-      };
-
-      fruitFly.calculateSmellConcentration(food);
-      assert.equal(fruitFly.smellConcentration, 0.2);
+    it(`can receive pre-defined coordinates of 'x' = ${x} and 'y' = ${y}`, () => {
+      const food = new Food();
+      const fruitFly = new FruitFly(index, food, preDefinedCoordinates);
+    
+      const { coordinates: coordinatesFruitFly } = fruitFly;
+      const { x: xFruitFly, y: yFruitFly } = coordinatesFruitFly;
+      
+      assert.equal(xFruitFly, x);
+      assert.equal(yFruitFly, y);
     });
   });
 
   describe('_generateStartingCoordinates', () => {
     it(`should generate a pseudo random x coordinate`, () => {
-      const fruitFly = new FruitFly(index, lowerBound, upperBound);
+      const food = new Food();
+      const fruitFly = new FruitFly(index, food, null, lowerBound, upperBound);
       const { x, y } = fruitFly.coordinates;
 
       assert.isNotNaN(x);
@@ -67,23 +47,34 @@ describe('FruitFly', function() {
 
   describe('lastBestPosition', () => {
     describe('on instantiation of a FruitFly', () => {
-      it('should be a clone of the instantiate FruitFLy', () => {
-        const fruitFly = new FruitFly();
-        const { lastBestPosition } = fruitFly;
+      it(`should contain a clone of the instantiated fruit fly's coordinates`, () => {
+        const food = new Food();
+        const index = 10;
 
-        assert.instanceOf(lastBestPosition, FruitFly);
+        const fruitFly = new FruitFly(index, food);
+        
+        const { lastBestPosition } = fruitFly;
+        const { x: xBest, y: yBest } = lastBestPosition;
+
+        const { coordinates } = fruitFly;
+        const { x: xCurrent, y: yCurrent } = coordinates;
+
+        assert.equal(xBest, xCurrent);
+        assert.equal(yBest, yCurrent);
       });
     });
   });
 
   describe('lowerBound', () => {
     it(`should contain the correct lowerBound`, () => {
-      const fruitFly = new FruitFly(index, lowerBound, upperBound);
+      const food = new Food();
+      const fruitFly = new FruitFly(index, food, null, lowerBound, upperBound);
       assert.equal(fruitFly.lowerBound, lowerBound, `${fruitFly.lowerBound} is equal to ${lowerBound}`);
     });
 
     it(`should contain the correct default lowerBound`, () => {
-      const fruitFly = new FruitFly(index);
+      const food = new Food();
+      const fruitFly = new FruitFly(index, food);
       assert.equal(fruitFly.lowerBound, WIDTH_LOWER_BOUND, `${fruitFly.lowerBound} is equal to ${WIDTH_LOWER_BOUND}`);
     });
   });
@@ -96,15 +87,16 @@ describe('FruitFly', function() {
         x: 100,
         y: 5,
       };
+      const index = 10;
 
-      const fruitFly = new FruitFly(index);
+      const fruitFly = new FruitFly(index, food);
       fruitFly._coordinates = {
         x: 1,
         y: 1,
       };
 
       // Act
-      fruitFly.smell(food);
+      fruitFly.smell();
       const { x: xFound, y: yFound } = fruitFly.coordinates;
 
       // Assert
@@ -116,13 +108,15 @@ describe('FruitFly', function() {
     });
   });
 
-  describe.only('_updateCoordinates', () => {
+  describe('_updateCoordinates', () => {
     const x = Math.floor(Math.random() * 50);
     const y = Math.floor(Math.random() * 75);
+    const index = 10;
 
     it(`should update the coordinates with 'x' = ${x} and 'y' = ${y}` , () => {
       // Arrange
-      const fruitFly = new FruitFly();
+      const food = new Food();
+      const fruitFly = new FruitFly(index, food);
       const updatedCoordinates = { x, y };
 
       // Act
@@ -137,14 +131,56 @@ describe('FruitFly', function() {
     });
   });
 
+  describe('_updateLastBestPosition', () => {
+    
+
+  });
+  
+  describe('_updateSmellConcentration', () => {
+    it('should return the distance between the fruitFly and the food (based on a 3, 4 5 triangle)', () => {
+      const food = new Food();
+      food._coordinates = { x: 4, y: 5};
+
+      const fruitFly = new FruitFly(index, food);
+
+      fruitFly._coordinates = {
+        x: 1,
+        y: 1,
+      };
+
+      fruitFly._updateSmellConcentration();
+      assert.equal(fruitFly.smellConcentration, 0.2);
+    });
+
+    it('should return the distance based on a 3, 4 5 triangle moved along X', () => {
+      const food = new Food();
+      food._coordinates = {
+        x: 6,
+        y: 5,
+      };
+      const fruitFly = new FruitFly(index, food);
+
+      fruitFly._coordinates = {
+        x: 3,
+        x: 3,
+        y: 1,
+      };
+
+      fruitFly._updateSmellConcentration();
+      assert.equal(fruitFly.smellConcentration, 0.2);
+    });
+  });
+
   describe('upperBound', () => {
     it(`should contain the correct upperBound`, () => {
-      const fruitFly = new FruitFly(index, lowerBound, upperBound);
+      const food = new Food();
+      const fruitFly = new FruitFly(index, food, null, lowerBound, upperBound);
       assert.equal(fruitFly.upperBound, upperBound, `${fruitFly.upperBound} is equal to ${upperBound}`);
     });
 
     it(`should contain the correct default upperBound`, () => {
-      const fruitFly = new FruitFly(index);
+      const food = new Food();
+      const fruitFly = new FruitFly(index, food);
       assert.equal(fruitFly.upperBound, WIDTH_UPPER_BOUND, `${fruitFly.upperBound} is equal to ${WIDTH_UPPER_BOUND}`);
     });
   });
