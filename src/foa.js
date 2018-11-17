@@ -49,9 +49,8 @@ export const foa = (
  */
 export const smell = (fruitFlies) => {
   fruitFlies.smell();
-  const { fruitFlies: fruitFlyInstances } = fruitFlies;
 
-  return { fruitFlies: fruitFlyInstances };
+  return { fruitFlies };
 };
 
 /**

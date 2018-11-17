@@ -30,7 +30,7 @@ describe('foa', function() {
       const { fruitFlies: updatedFruitFlies } = smell(fruitFlies);
 
       // Assert
-      updatedFruitFlies.forEach((fruitFly) => {
+      updatedFruitFlies.fruitFlies.forEach((fruitFly) => {
         const { coordinates } = fruitFly;
         const { x, y } = coordinates;
 

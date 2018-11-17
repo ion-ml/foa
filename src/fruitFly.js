@@ -1,5 +1,4 @@
 import {
-  DISTANCE_TO_FOOD_DEFAULT,
   ROOT_POWER,
   SQUARED_POWER,
   WIDTH_LOWER_BOUND,
@@ -67,7 +66,7 @@ export class FruitFly {
    * @access public
    */
   get smellConcentration() {
-    return this._smellConcentration || DISTANCE_TO_FOOD_DEFAULT;
+    return this._smellConcentration;
   }
 
   /**
@@ -108,6 +107,7 @@ export class FruitFly {
       this._updateCoordinates(
         this._generateStartingCoordinates()
       );
+
     } else {
       this._updateCoordinates(coordinates);
     }
@@ -126,15 +126,23 @@ export class FruitFly {
    * @since 0.1
    */
   smell() {
-    const { x: xLastBest, y: yLastBest } = this.lastBestPosition;
-    const { x: xCurrent, y: yCurrent } = this.coordinates;
-
-    const xDiff = xCurrent - xLastBest;
-    const yDiff = yCurrent - yLastBest;
-
-    let xUpdated = xCurrent + alpha(xDiff / WIDTH_UPPER_BOUND);
-    let yUpdated = yCurrent + alpha(yDiff / WIDTH_UPPER_BOUND);
+    const {
+      smellConcentration: smellBest,
+      x: xBest,
+      y: yBest,
+    } = this.lastBestPosition;
     
+    const {
+      x: xCurrent,
+      y: yCurrent,
+    } = this.coordinates;
+
+    const xDelta = xCurrent - xBest;
+    const yDelta = yCurrent - yBest;
+
+    let xUpdated = xCurrent + (alpha(smellBest) * xDelta)
+    let yUpdated = yCurrent + (alpha(smellBest) * yDelta);
+   
     // Enforce upper bound
     if (xUpdated > WIDTH_UPPER_BOUND) {
       xUpdated = WIDTH_UPPER_BOUND;
@@ -171,11 +179,12 @@ export class FruitFly {
    * @access protected
    */
   _generateStartingCoordinates(rand = false) {
-    rand = (rand === false ? Math.random() : rand);
+    const randX = (rand === false ? Math.random() : rand);
+    const randY = (rand === false ? Math.random() : rand);
 
     return {
-      x: this.lowerBound + (this.upperBound - this.lowerBound) *  rand,
-      y: this.lowerBound + (this.upperBound - this.lowerBound) *  rand,
+      x: this.lowerBound + (this.upperBound - this.lowerBound) * randX,
+      y: this.lowerBound + (this.upperBound - this.lowerBound) * randY,
     };
   }
 

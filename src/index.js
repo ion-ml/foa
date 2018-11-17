@@ -1,10 +1,14 @@
 import { trial } from './foa';
 import {
   printCsvBestPositionPerTrial,
-  printCsvFoodSwarmCoordinatesPerTrial,
+  printCsvFoodSwarmCoordinatesPerSingleTrial,
+  printCsvFruitFlyCoordinatesPerSingleTrial,
+  printCsvSmellConcentrationPerSingleTrial,
 } from './print';
 
 const trialResults = trial();
 
+printCsvFruitFlyCoordinatesPerSingleTrial(trialResults);
+printCsvFoodSwarmCoordinatesPerSingleTrial(trialResults);
+printCsvSmellConcentrationPerSingleTrial(trialResults);
 printCsvBestPositionPerTrial(trialResults);
-printCsvFoodSwarmCoordinatesPerTrial(trialResults);

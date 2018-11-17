@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.1.7
+
+- Update print functions.
+- Update the use of 'alpha' within the fruit fly.
+
+---
+
 ## 0.1.6
 
 - The inclusion of a `coordinates` param within the FruitFly constructor.
