@@ -103,8 +103,9 @@ export class FruitFly {
 
     const total = xDiffSquared + yDiffSquared;
     const distance = Math.pow(total, ROOT_POWER);
+    const inverseDistance = 1 / distance;
 
-    this._smellConcentration = 1 / distance;
+    this._smellConcentration = inverseDistance;
   }
 
   /**

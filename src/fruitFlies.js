@@ -1,6 +1,6 @@
 import { FruitFly } from './fruitFly';
 
-import { BASE_TEN, NUM_FRUIT_FLIES } from './config';
+import { BASE_TEN, NUM_FRUIT_FLIES, SQUARED_POWER } from './config';
 
 export class FruitFlies {
   
@@ -46,6 +46,24 @@ export class FruitFlies {
     });
   }
   
+  /**
+   * Find the best position with regard to f(x)
+   *
+   * @return {FruitFly} - The fruit fly with the best position.
+   */
+  findBestPosition() {
+    const fruitFlies = this.fruitFlies.map((fruitFly) => {
+      fruitFly.fx = Math.pow(fruitFly.smellConcentration, SQUARED_POWER);
+      return fruitFly;
+    });
+
+    return fruitFlies.reduce((min, fruitFly) => {
+      if (typeof min.fx === 'undefined') return fruitFly;
+
+      return (fruitFly.fx < min.fx ? fruitFly : min);
+    }, { fx: undefined });
+  }
+
   /**
    * Find the FruitFly closest to the food.
    *

@@ -49,13 +49,13 @@ export const foa = (
  */
 export const smell = (food, fruitFlies) => {
   fruitFlies.calculateSmellConcentration(food);
-  const bestPosition = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
+  const greatestSmellFruitFly = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
 
-  fruitFlies.smell(bestPosition);
+  fruitFlies.smell(greatestSmellFruitFly);
   const { fruitFlies: fruitFlyInstances } = fruitFlies;
 
   return {
-    bestPosition,
+    greatestSmellFruitFly,
     fruitFlies: fruitFlyInstances,
   };
 };
@@ -86,7 +86,8 @@ export const trial = (
   for (var i = 0; i < numTrials; i++) {
     food = new Food();
     fruitFlies = new FruitFlies(numFruitFlies);
-    bestPosition = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
+    fruitFlies.calculateSmellConcentration(food);
+    bestPosition = fruitFlies.findBestPosition(food);
     swarm = new Swarm(bestPosition);
 
     results[i] = foa(food, fruitFlies, swarm, numIterations);
@@ -108,7 +109,7 @@ export const trial = (
  */
 export const vision = (food, fruitFlies, swarm) => {
   fruitFlies.calculateSmellConcentration(food);
-  const bestPosition = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
+  const bestPosition = fruitFlies.findBestPosition(food);
   const { distanceToFood } = bestPosition;
 
   swarm.vision(bestPosition);
