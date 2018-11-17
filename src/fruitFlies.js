@@ -72,6 +72,10 @@ export class FruitFlies {
     this.fruitFlies.forEach(fruitFly => fruitFly.smell());
   }
 
+  transpose(delta) {
+    this.fruitFlies.forEach(fruitFly => fruitFly.transpose(delta));
+  }
+
   /**
    * A protected function that retuns coordinates.
    *

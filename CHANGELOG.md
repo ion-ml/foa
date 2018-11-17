@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.2.0
+
+- The addition of `_deriveDelta` within Swarm.
+- The addition of `transpose` within FruitFlies and FruitFly.
+- Update the print routines to show the delta value.
+
+---
+
 ## 0.1.7
 
 - Update print functions.

@@ -140,8 +140,8 @@ export class FruitFly {
     const xDelta = xCurrent - xBest;
     const yDelta = yCurrent - yBest;
 
-    let xUpdated = xCurrent + (alpha(smellBest) * xDelta)
-    let yUpdated = yCurrent + (alpha(smellBest) * yDelta);
+    let xUpdated = xCurrent + alpha(xDelta / WIDTH_UPPER_BOUND)
+    let yUpdated = yCurrent + alpha(yDelta / WIDTH_UPPER_BOUND);
    
     // Enforce upper bound
     if (xUpdated > WIDTH_UPPER_BOUND) {
@@ -170,7 +170,17 @@ export class FruitFly {
 
     this._updateCoordinates(updatedCoordinates);
   }
-  
+
+  transpose(delta) {
+    const { x: xCurrent, y: yCurrent } = this.coordinates;
+    const { x: xDelta, y: yDelta } = delta;
+    
+    this._updateCoordinates({
+      x: xCurrent - xDelta,
+      y: yCurrent - yDelta,
+    });
+  }
+
   /**
    * A protected method that generates the starting coordinates of the FruitFly.
    *

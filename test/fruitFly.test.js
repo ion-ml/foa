@@ -108,6 +108,22 @@ describe('FruitFly', function() {
     });
   });
 
+  describe('transpose', () => {
+    it('should update the coordinates of the current fruit fly with regard to delta', () => {
+      const delta = { x: -3, y: 2 };
+      const food = new Food();
+      const index = 1;
+      const fruitFly = new FruitFly(index, food);
+
+      fruitFly._updateCoordinates({ x: 1, y: 1 });
+      fruitFly.transpose(delta);
+      const { x, y } = fruitFly.coordinates;
+
+      assert.equal(x, 4);
+      assert.equal(y, -1);
+    });
+  });
+
   describe('_updateCoordinates', () => {
     const x = Math.floor(Math.random() * 50);
     const y = Math.floor(Math.random() * 75);

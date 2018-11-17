@@ -102,8 +102,9 @@ export const trial = (
 export const vision = (food, fruitFlies, swarm) => {
   const bestPosition = fruitFlies.findBestPosition(food);
   const { smellConcentration } = bestPosition;
+  const delta = swarm.vision(bestPosition);
 
-  swarm.vision(bestPosition);
+  fruitFlies.transpose(delta);
 
-  return { bestPosition, food, fruitFlies, smellConcentration, swarm };
+  return { bestPosition, delta, food, fruitFlies, smellConcentration, swarm };
 };
