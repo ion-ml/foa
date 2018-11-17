@@ -98,7 +98,7 @@ export const trial = (
 /**
  * @function vision
  *
- * @description Run a series of FOA trials.
+ * @description Run a .
  *
  * @param {number} numFruitFlies - The number of fruit flies.
  * @param {number} numIterations - The number of iterations per trial.
@@ -109,9 +109,9 @@ export const trial = (
 export const vision = (food, fruitFlies, swarm) => {
   fruitFlies.calculateSmellConcentration(food);
   const bestPosition = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
-  const { smellConcentration } = bestPosition;
+  const { distanceToFood } = bestPosition;
 
   swarm.vision(bestPosition);
 
-  return { bestPosition, smellConcentration, food, fruitFlies, swarm };
+  return { bestPosition, distanceToFood, food, fruitFlies, swarm };
 };
