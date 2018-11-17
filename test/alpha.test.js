@@ -3,7 +3,7 @@ import { assert } from 'chai';
 import { alpha } from '../src/alpha';
 
 describe('alpha', () => {
-  describe.only('should always return a number from between 0 and 1', () => {
+  describe('should always return a number from between 0 and 1', () => {
     const min = 0;
     const max = 10;
 
@@ -14,9 +14,9 @@ describe('alpha', () => {
       
       it(`when called with a 'diff' value of ${i}`, () => {
 
-        assert.isNotNaN(alpha(i));
-        assert.isAtLeast(alpha(i), lowerBound);
-        assert.isAtMost(alpha(i), upperBound);
+        assert.isNotNaN(alpha(i / upperBound));
+        assert.isAtLeast(alpha(i / upperBound), lowerBound);
+        assert.isAtMost(alpha(i / upperBound), upperBound);
       });
     }
   });

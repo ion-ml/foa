@@ -8,7 +8,7 @@ describe('Swarm', function() {
     const numFruitFlies = 10;
     const food = new Food();
     const fruitFlies = new FruitFlies(numFruitFlies);
-    const bestPosition = fruitFlies.findFruitFlyClosestToFood(food);
+    const bestPosition = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
     
     const { coordinates: coordinatesBest } = bestPosition;
     const { x: xBest, y: yBest } = coordinatesBest;

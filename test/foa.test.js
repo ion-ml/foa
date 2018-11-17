@@ -10,7 +10,7 @@ describe('foa', function() {
       const food = new Food();
       const numFruitFlies = 3;
       const fruitFlies = new FruitFlies(numFruitFlies);
-      const bestPosition = fruitFlies.findFruitFlyClosestToFood(food);
+      const bestPosition = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
       const swarm = new Swarm(bestPosition);
       const numIterations = 100;
       const results = foa(food, fruitFlies, swarm, numIterations);
@@ -48,7 +48,7 @@ describe('foa', function() {
       const food = new Food();
       const numFruitFlies = 3;
       const fruitFlies = new FruitFlies(numFruitFlies);
-      const bestPosition = fruitFlies.findFruitFlyClosestToFood(food);
+      const bestPosition = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
       const swarm = new Swarm(bestPosition);
 
       // Act

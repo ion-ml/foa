@@ -3,7 +3,7 @@ import { FruitFlies } from '../src/fruitFlies';
 import { FruitFly } from '../src/fruitFly';
 
 describe('FruitFlies', function() {
-  describe('calculateDistanceToFood', () => {
+  describe('calculateSmellConcentration', () => {
     it('should cause each fruitFly to recalculate its distance to the food', () => {  
       const numFruitFlies = 10;
       const fruitFlies = new FruitFlies(numFruitFlies);
@@ -15,32 +15,32 @@ describe('FruitFlies', function() {
         },
       };
 
-      fruitFlies.calculateDistanceToFood(food);
+      fruitFlies.calculateSmellConcentration(food);
 
       allFruitFlyCoordinates.forEach((fruitFlyCoordinates, index) => {
         const fruitFly = new FruitFly(index);
 
         fruitFly._coordinates = fruitFlyCoordinates;
-        fruitFly.calculateDistanceToFood(food);
+        fruitFly.calculateSmellConcentration(food);
         
-        const expectedDistance = fruitFly.distanceToFood;
-        const foundDistance = fruitFlies.fruitFlies[index].distanceToFood;
+        const expectedDistance = fruitFly.smellConcentration;
+        const foundDistance = fruitFlies.fruitFlies[index].smellConcentration;
 
         assert.equal(foundDistance, expectedDistance);
       });
     });
   });
 
-  describe('findFruitFlyClosestToFood', () => {
-    it('should return the fruitFly with the minimum distance to the food', () => {
+  describe('findFruitFlyGreatestSmellConcentration', () => {
+    it('should return the fruitFly with the maximum smell concentration', () => {
       const numFruitFlies = 3;
       const fruitFlies = new FruitFlies(numFruitFlies);
 
-      fruitFlies._fruitFlies[0]._distanceToFood = 100;
-      fruitFlies._fruitFlies[1]._distanceToFood = 50;
-      fruitFlies._fruitFlies[2]._distanceToFood = 250;
+      fruitFlies._fruitFlies[0]._smellConcentration = 100;
+      fruitFlies._fruitFlies[1]._smellConcentration = 50;
+      fruitFlies._fruitFlies[2]._smellConcentration = 250;
 
-      assert.equal(fruitFlies.findFruitFlyClosestToFood().index, 1);
+      assert.equal(fruitFlies.findFruitFlyGreatestSmellConcentration().index, 2);
     });
   });
 

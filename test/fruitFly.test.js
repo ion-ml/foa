@@ -1,13 +1,13 @@
 import { assert } from 'chai';
-import { FruitFly } from '../../src/1/fruitFly';
-import { WIDTH_LOWER_BOUND, WIDTH_UPPER_BOUND } from '../../src/1/config';
+import { FruitFly } from '../src/fruitFly';
+import { WIDTH_LOWER_BOUND, WIDTH_UPPER_BOUND } from '../src/config';
 
 describe('FruitFly', function() {
   const index = 2;
   const lowerBound = 0;
   const upperBound = 40;
 
-  describe('calculateDistanceToFood', () => {
+  describe('calculateSmellConcentration', () => {
     it('should return the distance between the fruitFly and the food (based on a 3, 4 5 triangle)', () => {
       const fruitFly = new FruitFly(index);
 
@@ -23,8 +23,8 @@ describe('FruitFly', function() {
         },
       };
 
-      fruitFly.calculateDistanceToFood(food);
-      assert.equal(fruitFly.distanceToFood, 5);
+      fruitFly.calculateSmellConcentration(food);
+      assert.equal(fruitFly.smellConcentration, 0.2);
     });
 
     it('should return the distance based on a 3, 4 5 triangle moved along X', () => {
@@ -42,8 +42,8 @@ describe('FruitFly', function() {
         },
       };
 
-      fruitFly.calculateDistanceToFood(food);
-      assert.equal(fruitFly.distanceToFood, 5);
+      fruitFly.calculateSmellConcentration(food);
+      assert.equal(fruitFly.smellConcentration, 0.2);
     });
   });
 
@@ -71,34 +71,6 @@ describe('FruitFly', function() {
     it(`should contain the correct default lowerBound`, () => {
       const fruitFly = new FruitFly(index);
       assert.equal(fruitFly.lowerBound, WIDTH_LOWER_BOUND, `${fruitFly.lowerBound} is equal to ${WIDTH_LOWER_BOUND}`);
-    });
-  });
-
-  describe('move', () => {
-    it('should move the fruitFly based on the difference between the current swarm centre and the food', () => {
-      const fruitFly = new FruitFly(index);
-
-      fruitFly._coordinates = {
-        x: 1,
-        y: 1,
-      };
-
-      const distanceToMove = {
-        x: 100,
-        y: 5,
-      };
-
-      const { x: xBeforeMove, y: yBeforeMove } = fruitFly.coordinates;
-      const { x: xDistance, y: yDistance } = distanceToMove;
-      const xExpected = xBeforeMove + xDistance;
-      const yExpected = yBeforeMove + yDistance;
-
-      fruitFly.move(distanceToMove);
-
-      const { x: xFound, y: yFound } = fruitFly.coordinates;
-
-      assert.equal(xFound, xExpected);
-      assert.equal(yFound, yExpected);
     });
   });
 

@@ -21,13 +21,13 @@ export class FruitFly {
   }
 
   /**
-   * @property distanceToFood
+   * @property smellConcentration
    * @type {number}
    * @description The 'distance' from the current FruitFly to the food.
    * @access public
    */
-  get distanceToFood() {
-    return this._distanceToFood || DISTANCE_TO_FOOD_DEFAULT;
+  get smellConcentration() {
+    return this._smellConcentration || DISTANCE_TO_FOOD_DEFAULT;
   }
 
   /**
@@ -70,7 +70,7 @@ export class FruitFly {
     lowerBound = WIDTH_LOWER_BOUND,
     upperBound = WIDTH_UPPER_BOUND
   ) {
-    this._distanceToFood = 0;
+    this._smellConcentration = 0;
     this._index = index;
     this._lowerBound = lowerBound;
     this._upperBound = upperBound;
@@ -85,8 +85,8 @@ export class FruitFly {
    * @returns {null}
    * @access public
    */
-  calculateDistanceToFood(food) {
-    let distanceToFood;
+  calculateSmellConcentration(food) {
+    let smellConcentration;
     const { coordinates } = food;
     const { x: xFood, y: yFood } = coordinates;
     const { x: xCurrent, y: yCurrent } = this.coordinates;
@@ -102,26 +102,9 @@ export class FruitFly {
     );
 
     const total = xDiffSquared + yDiffSquared;
-    distanceToFood = Math.pow(total, ROOT_POWER);
+    const distance = Math.pow(total, ROOT_POWER);
 
-    this._distanceToFood = distanceToFood;
-  }
-
-  /**
-   * Move the current FruitFly by the received 'distancesToMove'.
-   *
-   * @param {Object, <string, number>} distanceToMove
-   * @returns {null}
-   * @access public
-   */
-  move(distanceToMove) {
-    const { x: xMove, y: yMove } = distanceToMove;
-    const { x: xCurrent, y: yCurrent } = this.coordinates;
-
-    this._coordinates = {
-      x: xCurrent + xMove,
-      y: yCurrent + yMove,
-    };
+    this._smellConcentration = 1 / distance;
   }
 
   /**
@@ -169,9 +152,6 @@ export class FruitFly {
       x: xUpdated,
       y: yUpdated,
     };
-
-    console.log('updatedCoordinates');
-    console.log(updatedCoordinates);
 
     this._coordinates = updatedCoordinates;
   }
