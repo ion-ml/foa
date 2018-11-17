@@ -1,5 +1,8 @@
 import { assert } from 'chai';
+
+import { Food } from '../src/food';
 import { FruitFly } from '../src/fruitFly';
+
 import { WIDTH_LOWER_BOUND, WIDTH_UPPER_BOUND } from '../src/config';
 
 describe('FruitFly', function() {
@@ -62,6 +65,17 @@ describe('FruitFly', function() {
     });
   });
 
+  describe('lastBestPosition', () => {
+    describe('on instantiation of a FruitFly', () => {
+      it('should be a clone of the instantiate FruitFLy', () => {
+        const fruitFly = new FruitFly();
+        const { lastBestPosition } = fruitFly;
+
+        assert.instanceOf(lastBestPosition, FruitFly);
+      });
+    });
+  });
+
   describe('lowerBound', () => {
     it(`should contain the correct lowerBound`, () => {
       const fruitFly = new FruitFly(index, lowerBound, upperBound);
@@ -77,11 +91,10 @@ describe('FruitFly', function() {
   describe('smell', () => {
     it('should move the fruitFly based on the received bestPosition', () => {
       // Arrange
-      const bestPosition = {
-        coordinates: {
-          x: 100,
-          y: 5,
-        },
+      const food = new Food();
+      food._coordinates = {
+        x: 100,
+        y: 5,
       };
 
       const fruitFly = new FruitFly(index);
@@ -91,7 +104,7 @@ describe('FruitFly', function() {
       };
 
       // Act
-      fruitFly.smell(bestPosition);
+      fruitFly.smell(food);
       const { x: xFound, y: yFound } = fruitFly.coordinates;
 
       // Assert
@@ -100,6 +113,27 @@ describe('FruitFly', function() {
       
       assert.isAtLeast(yFound, WIDTH_LOWER_BOUND);
       assert.isAtMost(yFound, WIDTH_UPPER_BOUND);
+    });
+  });
+
+  describe.only('_updateCoordinates', () => {
+    const x = Math.floor(Math.random() * 50);
+    const y = Math.floor(Math.random() * 75);
+
+    it(`should update the coordinates with 'x' = ${x} and 'y' = ${y}` , () => {
+      // Arrange
+      const fruitFly = new FruitFly();
+      const updatedCoordinates = { x, y };
+
+      // Act
+      fruitFly._updateCoordinates(updatedCoordinates);
+      
+      // Assert
+      const { coordinates: updatedCoordinatesFruitFly } = fruitFly;
+      const { x: xUpdated, y: yUpdated } = updatedCoordinatesFruitFly;
+
+      assert.equal(xUpdated, x);
+      assert.equal(yUpdated, y);
     });
   });
 

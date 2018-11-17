@@ -49,15 +49,11 @@ export const foa = (
  */
 export const smell = (food, fruitFlies) => {
   fruitFlies.calculateSmellConcentration(food);
-  const greatestSmellFruitFly = fruitFlies.findFruitFlyGreatestSmellConcentration(food);
-
-  fruitFlies.smell(greatestSmellFruitFly);
+  fruitFlies.smell(food);
+  
   const { fruitFlies: fruitFlyInstances } = fruitFlies;
 
-  return {
-    greatestSmellFruitFly,
-    fruitFlies: fruitFlyInstances,
-  };
+  return { fruitFlies: fruitFlyInstances };
 };
 
 /**

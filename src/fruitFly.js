@@ -41,6 +41,16 @@ export class FruitFly {
   }
 
   /**
+   * @property lastBestPosition
+   * @type {Object<string, number>}
+   * @description An Object representing the last best coordinates of the current fruit fly.
+   * @access public
+   */
+  get lastBestCoordinates() {
+    return this._lastBestPosition;
+  }
+
+  /**
    * @property lowerBound
    * @type {number}
    * @description The lower bound of the X dimension.
@@ -75,7 +85,9 @@ export class FruitFly {
     this._lowerBound = lowerBound;
     this._upperBound = upperBound;
 
-    this._coordinates = this._generateStartingCoordinates();
+    this._updateCoordinates(
+      this._generateStartingCoordinates()
+    );
   }
 
   /**
@@ -112,19 +124,19 @@ export class FruitFly {
    * Smell phase. Move the fruit fly with regard to
    * the 'bestPosition' and a random factor.
    *
-   * @param {Object, <string, number>} bestPosition
+   * @param {Food} food - An object representing the food.
    *
    * @returns {null}
    * @access public
    * @since 0.1
    */
-  smell(bestPosition) {
-    const { coordinates: bestCoordinates } = bestPosition;
-    const { x: xBest, y: yBest } = bestCoordinates;
+  smell(food) {
+    const { coordinates: lastBestCoordinates } = this.lastBestPosition;
+    const { x: xLastBest, y: yLastBest } = lastBestCoordinates;
     const { x: xCurrent, y: yCurrent } = this.coordinates;
 
-    const xDiff = xCurrent - xBest;
-    const yDiff = yCurrent - yBest;
+    const xDiff = xCurrent - xLastBest;
+    const yDiff = yCurrent - yLastBest;
 
     let xUpdated = xCurrent + alpha(xDiff / WIDTH_UPPER_BOUND);
     let yUpdated = yCurrent + alpha(yDiff / WIDTH_UPPER_BOUND);
@@ -154,7 +166,16 @@ export class FruitFly {
       y: yUpdated,
     };
 
-    this._coordinates = updatedCoordinates;
+    this._updateCoordinates(updatedCoordinates);
+
+    /*
+    this.lastBestPostion.calculateSmellConcentration(food);
+    this.calculateSmellConcentration(food);
+
+    if (this.smellConcentration > this.lastBestPosition.smellConcentration) {
+      this._lastBestPosition = Object.assign({}, this);
+    }
+    */
   }
 
   /**
@@ -171,5 +192,9 @@ export class FruitFly {
       x: this.lowerBound + (this.upperBound - this.lowerBound) *  rand,
       y: this.lowerBound + (this.upperBound - this.lowerBound) *  rand,
     };
+  }
+
+  _updateCoordinates(coordinates) {
+    this._coordinates = coordinates; 
   }
 }

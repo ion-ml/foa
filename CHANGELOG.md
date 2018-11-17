@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.1.5
+
+- The inclusion of an `_updateCoordinates` method within FruitFly.
+
+---
+
 ## 0.1.4
 
 - The inclusion of f(x)
