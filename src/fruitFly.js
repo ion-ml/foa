@@ -165,12 +165,7 @@ export class FruitFly {
     } = this.coordinates;
 
     let xDelta = ((xCurrent - xBest) / upperBound);
-    xDelta = xDelta > DELTA_UPPER_BOUND ? DELTA_UPPER_BOUND : xDelta;
-    xDelta = xDelta < DELTA_LOWER_BOUND ? DELTA_LOWER_BOUND : xDelta;
-
     let yDelta = ((yCurrent - yBest) / upperBound);
-    yDelta = yDelta > DELTA_UPPER_BOUND ? DELTA_UPPER_BOUND : yDelta;
-    yDelta = yDelta < DELTA_LOWER_BOUND ? DELTA_LOWER_BOUND : yDelta;
 
     let xAlpha = alpha(
       xDelta,
@@ -178,7 +173,6 @@ export class FruitFly {
       this.chaoticMapDimension,
     );
 
-    xAlpha = isNaN(xAlpha) ? Math.random() : xAlpha;
     let xUpdated = xAlpha + xCurrent;
 
     let yAlpha = alpha(
@@ -188,7 +182,6 @@ export class FruitFly {
     );
 
 
-    yAlpha = isNaN(yAlpha) ? Math.random() : yAlpha;
     let yUpdated = yAlpha + yCurrent;
 
     // Enforce upper bound
@@ -246,8 +239,8 @@ export class FruitFly {
     const randY = (rand === false ? Math.random() : rand);
 
     const coordinates = {
-      x: lowerBound + (upperBound - lowerBound) + (lowerBound * randX),
-      y: lowerBound + (upperBound - lowerBound) + (lowerBound * randY),
+      x: lowerBound + ((upperBound - lowerBound) * randX),
+      y: lowerBound + ((upperBound - lowerBound) * randY),
     };
 
     return coordinates;

@@ -1,5 +1,4 @@
-const onClick = (e) => {
-  console.log('on click');
+export const onClick = (e) => {
   var el = document.getElementById("results");
 
   var numFruitFlies = document.getElementById("num-fruit-flies").value;      

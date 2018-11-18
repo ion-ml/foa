@@ -1,3 +1,5 @@
+const BASE_TEN = 10;
+
 export class Food {
 
   /**
@@ -33,7 +35,7 @@ export class Food {
    * @constructor
    * @access public
    */
-  constructor(max, min) {
+  constructor(min, max) {
     this._max = max;
     this._min = min;
     this._coordinates = this._generateFoodCoordinates();
@@ -59,6 +61,9 @@ export class Food {
    * @access protected
    */
   _generateRandomInt() {
-    return Math.floor(Math.random() * (this.max - this.min + 1) + this.min);
+    const lowerBound = parseInt(this.min, BASE_TEN);
+    const upperBound = parseInt(this.max, BASE_TEN);
+
+    return lowerBound + ((upperBound - lowerBound) * Math.random());
   }
 }

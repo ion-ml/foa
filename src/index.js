@@ -1,3 +1,8 @@
 export { foa, smell, trial, vision } from './foa';
-export { printCsvDeltaPerSingleTrial } from './print';
+export { onClick } from './onClick';
+export {
+  printCsvDeltaPerSingleTrial,
+  printCsvFoodSwarmCoordinates,
+  printCsvFoodSwarmCoordinatesPerIteration,
+} from './print';
 

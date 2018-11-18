@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.5.0
+
+- The addition of a 'Run' button
+- The generation of the output for a single trial.
+
+---
+
 ## 0.4.0
 
 - Fix instantiation buy resulting from the new params.
