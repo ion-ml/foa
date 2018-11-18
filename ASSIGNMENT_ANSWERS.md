@@ -1,5 +1,17 @@
 ## Assignment answers
 
+### TODO
+
+- Q 1.b
+- Q 2.b
+- Q 3
+- Q 4.b
+- Q 4.c
+- Q 4.d
+- Q 5 - differences PSO
+
+---
+
 ### Q 1.a
 
 > Explain the inspiration, the main features and the expected function of the algorithm in words.
