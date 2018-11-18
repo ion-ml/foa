@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.7.1
+
+- Addition `printCsvCoordinatesPerIteration` function.
+
+---
+
 ## 0.7.0
 
 - Additional 'alpha' functions to clean both 'alpha' and 'delta'.

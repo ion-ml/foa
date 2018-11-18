@@ -19,9 +19,9 @@ export const onClick = (e) => {
     chaoticMapDimension
   );
 
-  foa.printCsvFoodSwarmCoordinatesPerIteration(
+  foa.printCsvCoordinatesPerIteration(
     trialResults,
     el,
-    numTrials
+    numIterations
   );
 };
