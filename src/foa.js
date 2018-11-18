@@ -2,11 +2,6 @@ import { Food } from './food';
 import { FruitFlies } from './fruitFlies';
 import { Swarm } from './swarm';
 
-import {
-  NUM_FRUIT_FLIES,
-  NUM_ITERATIONS, NUM_TRIALS
-} from './config';
-
 /**
  * @function foa
  *
@@ -23,7 +18,7 @@ export const foa = (
   food,
   fruitFlies,
   swarm,
-  numIterations = NUM_ITERATIONS
+  numIterations
 ) => {
   const results = [];
 
@@ -61,13 +56,21 @@ export const smell = (fruitFlies) => {
  * @param {number} numFruitFlies - The number of fruit flies.
  * @param {number} numIterations - The number of iterations per trial.
  * @param {number} numTrials - The number of trials.
+ * @param {number} searchSpaceLowerBound.
+ * @param {number} searchSpaceUpperBound.
+ * @param {string} chaoticMapType.
+ * @param {number} chaoticMapDimension.
  *
  * @returns {[]}
  */
 export const trial = (
-  numFruitFlies = NUM_FRUIT_FLIES,
-  numIterations = NUM_ITERATIONS,
-  numTrials = NUM_TRIALS
+  numFruitFlies,
+  numIterations,
+  numTrials,
+  searchSpaceLowerBound,
+  searchSpaceUpperBound,
+  chaoticMapType,
+  chaoticMapDimension
 ) => {
   const results = [];
 
@@ -77,8 +80,20 @@ export const trial = (
   let swarm;
 
   for (var i = 0; i < numTrials; i++) {
-    food = new Food();
-    fruitFlies = new FruitFlies(food, numFruitFlies);
+    food = new Food(
+      searchSpaceLowerBound,
+      searchSpaceUpperBound
+    );
+
+    fruitFlies = new FruitFlies(
+      food,
+      numFruitFlies,
+      searchSpaceLowerBound,
+      searchSpaceUpperBound,
+      chaoticMapType,
+      chaoticMapDimension
+    );
+    
     bestPosition = fruitFlies.findBestPosition();
     swarm = new Swarm(bestPosition);
 

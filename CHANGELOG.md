@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.3.0
+
+- The addition of HTML form fields to enable the variables to be added dynamically.
+- Updated tests.
+
+---
+
 ## 0.2.0
 
 - The addition of `_deriveDelta` within Swarm.

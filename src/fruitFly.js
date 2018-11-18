@@ -1,13 +1,29 @@
-import {
-  ROOT_POWER,
-  SQUARED_POWER,
-  WIDTH_LOWER_BOUND,
-  WIDTH_UPPER_BOUND,
-} from './config';
-
 import { alpha } from './alpha';
 
+const ROOT_POWER = 0.5;
+const SQUARED_POWER = 2;
+
 export class FruitFly {
+  
+  /**
+   * @property chaoticMapType
+   * @type {string}
+   * @description The chaotic map type.
+   * @access public
+   */
+  get chaoticMapType() {
+    return this._chaoticMapType;
+  }
+  
+  /**
+   * @property chaoticMapDimension
+   * @type {number}
+   * @description The chaotic map dimension.
+   * @access public
+   */
+  get chaoticMapDimension() {
+    return this._chaoticMapDimension;
+  }
 
   /**
    * @property coordinates
@@ -50,16 +66,6 @@ export class FruitFly {
   }
 
   /**
-   * @property lowerBound
-   * @type {number}
-   * @description The lower bound of the X dimension.
-   * @access public
-   */
-  get lowerBound() {
-    return this._lowerBound;
-  }
-
-  /**
    * @property smellConcentration
    * @type {number}
    * @description The 'distance' from the current FruitFly to the food.
@@ -68,15 +74,25 @@ export class FruitFly {
   get smellConcentration() {
     return this._smellConcentration;
   }
+  
+  /**
+   * @property searchSpaceLowerBound
+   * @type {number}
+   * @description The lower bound of the X dimension.
+   * @access public
+   */
+  get searchSpaceLowerBound() {
+    return this._searchSpaceLowerBound;
+  }
 
   /**
-   * @property upperBound
+   * @property searchSpaceUpperBound
    * @type {number}
    * @description The upper bound of the X dimension.
    * @access public
    */
-  get upperBound() {
-    return this._upperBound;
+  get searchSpaceUpperBound() {
+    return this._searchSpaceUpperBound;
   }
 
   /**
@@ -85,8 +101,8 @@ export class FruitFly {
    * @param {number} index - The identifying number of the current FruitFly.
    * @param {Food} food - The desired food object.
    * @param {Object<string, number>} coordinates - Pre-defined coordinates. Defaults to null.
-   * @param {number} lowerBound - The lower bound width. Default to WIDTH_LOWER_BOUND.
-   * @param {number} upperBound - The upper bound width. Defaults to WIDTH_UPPER_BOUND. 
+   * @param {number} searchSpaceLowerBound - The lower bound width. Default to this.searchSpaceLowerBound.
+   * @param {number} searchSpaceUpperBound - The upper bound width. Defaults to this.searchSpaceUpperBound. 
    *
    * @access public
    */
@@ -94,14 +110,19 @@ export class FruitFly {
     index,
     food,
     coordinates = null,
-    lowerBound = WIDTH_LOWER_BOUND,
-    upperBound = WIDTH_UPPER_BOUND,
+    searchSpaceLowerBound,
+    searchSpaceUpperBound,
+    chaoticMapType,
+    chaoticMapDimension
   ) {
+    
     this._food = food;
     this._index = index;
-    this._lowerBound = lowerBound;
     this._smellConcentration = 0;
-    this._upperBound = upperBound;
+    this._searchSpaceLowerBound = searchSpaceLowerBound;
+    this._searchSpaceUpperBound = searchSpaceUpperBound;
+    this._chaoticMapType = chaoticMapType;
+    this._chaoticMapDimension = chaoticMapDimension;
 
     if (coordinates === null) {
       this._updateCoordinates(
@@ -140,27 +161,36 @@ export class FruitFly {
     const xDelta = xCurrent - xBest;
     const yDelta = yCurrent - yBest;
 
-    let xUpdated = xCurrent + alpha(xDelta / WIDTH_UPPER_BOUND)
-    let yUpdated = yCurrent + alpha(yDelta / WIDTH_UPPER_BOUND);
+    let xUpdated = xCurrent + alpha(
+      (xDelta / this.searchSpaceUpperBound),
+      this.chaoticMapType,
+      this.chaoticMapDimension,
+    );
+
+    let yUpdated = yCurrent + alpha(
+      (yDelta / this.searchSpaceUpperBound),
+      this.chaoticMapType,
+      this.chaoticMapDimension,
+    );
    
     // Enforce upper bound
-    if (xUpdated > WIDTH_UPPER_BOUND) {
-      xUpdated = WIDTH_UPPER_BOUND;
+    if (xUpdated > this.searchSpaceUpperBound) {
+      xUpdated = this.searchSpaceUpperBound;
     }
 
     // Enforce lower bound
-    if (xUpdated < WIDTH_LOWER_BOUND) {
-      xUpdated = WIDTH_LOWER_BOUND;
+    if (xUpdated < this.searchSpaceLowerBound) {
+      xUpdated = this.searchSpaceLowerBound;
     }
     
     // Enforce upper bound
-    if (yUpdated > WIDTH_UPPER_BOUND) {
-      yUpdated = WIDTH_UPPER_BOUND;
+    if (yUpdated > this.searchSpaceUpperBound) {
+      yUpdated = this.searchSpaceUpperBound;
     }
 
     // Enforce lower bound
-    if (yUpdated < WIDTH_LOWER_BOUND) {
-      yUpdated = WIDTH_LOWER_BOUND;
+    if (yUpdated < this.searchSpaceLowerBound) {
+      yUpdated = this.searchSpaceLowerBound;
     }
     
     const updatedCoordinates = {
@@ -168,7 +198,9 @@ export class FruitFly {
       y: yUpdated,
     };
 
-    this._updateCoordinates(updatedCoordinates);
+    this._updateCoordinates(
+      updatedCoordinates
+    );
   }
 
   transpose(delta) {
@@ -193,8 +225,8 @@ export class FruitFly {
     const randY = (rand === false ? Math.random() : rand);
 
     return {
-      x: this.lowerBound + (this.upperBound - this.lowerBound) * randX,
-      y: this.lowerBound + (this.upperBound - this.lowerBound) * randY,
+      x: this.searchSpaceLowerBound + ((this.searchSpaceUpperBound - this.searchSpaceLowerBound) * randX),
+      y: this.searchSpaceLowerBound + ((this.searchSpaceUpperBound - this.searchSpaceLowerBound) * randY),
     };
   }
 
@@ -212,7 +244,12 @@ export class FruitFly {
   _updateLastBestPosition() {
     const lastBestFruitFly = new FruitFly(
       this.index,
-      this.lastBestPosition
+      this.lastBestPosition,
+      null,
+      this.searchSpaceLowerBound,
+      this.searchSpaceUpperBound,
+      this.chaoticMapType,
+      this.chaoticMapDimension,
     );
     
     if (this.smellConcentration > lastBestFruitFly.smellConcentration) {

@@ -1,8 +1,29 @@
 import { FruitFly } from './fruitFly';
 
-import { BASE_TEN, NUM_FRUIT_FLIES, SQUARED_POWER } from './config';
+const ROOT_POWER = 0.5;
+const SQUARED_POWER = 2;
 
 export class FruitFlies {
+  
+  /**
+   * @property chaoticMapType
+   * @type {string}
+   * @description The chaotic map type.
+   * @access public
+   */
+  get chaoticMapType() {
+    return this._chaoticMapType;
+  }
+  
+  /**
+   * @property chaoticMapDimension
+   * @type {number}
+   * @description The chaotic map dimension.
+   * @access public
+   */
+  get chaoticMapDimension() {
+    return this._chaoticMapDimension;
+  }
   
   /**
    * @property food
@@ -33,7 +54,27 @@ export class FruitFlies {
   get length() {
     return this._fruitFlies.length;
   }
+  
+  /**
+   * @property searchSpaceLowerBound
+   * @type {number}
+   * @description The search space lower bound.
+   * @access public
+   */
+  get searchSpaceLowerBound() {
+    return this._searchSpaceLowerBound;
+  }
 
+  /**
+   * @property searchSpaceUpperBound
+   * @type {number}
+   * @description The search space upper bound.
+   * @access public
+   */
+  get searchSpaceUpperBound() {
+    return this._searchSpaceUpperBound;
+  }
+  
   /**
    * @constructor
    *
@@ -41,9 +82,21 @@ export class FruitFlies {
    * @param {number} numFruitFlies - The number of fruit flies to be created.
    *                               - Defaults to NUM_FRUIT_FLIES.
    */
-  constructor(food, numFruitFlies = NUM_FRUIT_FLIES) {
+  constructor(
+    food,
+    numFruitFlies,
+    searchSpaceLowerBound,
+    searchSpaceUpperBound,
+    chaoticMapType,
+    chaoticMapDimension
+  ) {
     this._food = food;
     this._fruitFlies = [];
+    this._searchSpaceLowerBound = searchSpaceLowerBound;
+    this._searchSpaceUpperBound = searchSpaceUpperBound;
+    this._chaoticMapType = chaoticMapType;
+    this._chaoticMapDimension = chaoticMapDimension;
+
     this._generateFruitFlies(numFruitFlies);
   }
   
@@ -56,8 +109,15 @@ export class FruitFlies {
     return this.fruitFlies.reduce((max, fruitFly) => {
       if (typeof max.smellConcentration === 'undefined') return fruitFly;
 
-      const fruitFlyFx = Math.pow(fruitFly.smellConcentration, SQUARED_POWER);
-      const maxFx = Math.pow(max.smellConcentration, SQUARED_POWER);
+      const fruitFlyFx = Math.pow(
+        fruitFly.smellConcentration,
+        SQUARED_POWER
+      );
+      
+      const maxFx = Math.pow(
+        max.smellConcentration,
+        SQUARED_POWER
+      );
 
       return (fruitFlyFx > maxFx ? fruitFly : max);
     }, { smellConcentration: undefined });
@@ -94,7 +154,15 @@ export class FruitFlies {
    */
   _generateFruitFlies(numFruitFlies) {
     for (var i = 0; i < numFruitFlies; i++) {
-      this._fruitFlies[i] = new FruitFly(i, this.food);
+      this._fruitFlies[i] = new FruitFly(
+        i,
+        this.food,
+        null,
+        this.searchSpaceLowerBound,
+        this.searchSpaceUpperBound,
+        this.chaoticMapType,
+        this.chaoticMapDimension
+      );
     }
   }
 }

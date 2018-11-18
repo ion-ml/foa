@@ -40,9 +40,25 @@ describe('FruitFlies', function() {
       });
     });
     it('contains objects with numeric coordinates', () => {
-      const food = new Food();
+      const lowerBound = -10;
+      const upperBound = 10;
+
+      const food = new Food(
+        lowerBound,
+        upperBound
+      );
+      
       const expectedNumFruitFlies = 10;
-      const fruitFlies = new FruitFlies(food, expectedNumFruitFlies);
+      
+      const fruitFlies = new FruitFlies(
+        food,
+        expectedNumFruitFlies,
+        null,
+        lowerBound,
+        upperBound,
+        'chebyshev',
+        1
+      );
 
       fruitFlies.fruitFlies.forEach(fruitFly => {
         const { x, y } = fruitFly.coordinates;

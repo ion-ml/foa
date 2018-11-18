@@ -1,8 +1,3 @@
-import { trial } from './foa';
-import {
-  printCsvDeltaPerSingleTrial 
-} from './print';
+export { foa, smell, trial, vision } from './foa';
+export { printCsvDeltaPerSingleTrial } from './print';
 
-const trialResults = trial();
-
-printCsvDeltaPerSingleTrial(trialResults); 

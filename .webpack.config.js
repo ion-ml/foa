@@ -5,8 +5,10 @@ module.exports = {
   entry: './src/index.js',
   watch: false,
   output: {
+    filename: 'foa.js',
+    library: 'foa',
+    libraryTarget: 'umd',
     path: path.resolve(__dirname, './dist/'),
-    filename: 'foa.js'
   },
   devtool: 'eval-source-map',
   module: {

@@ -1,8 +1,3 @@
-import {
-  WIDTH_LOWER_BOUND,
-  WIDTH_UPPER_BOUND,
-} from './config';
-
 export class Food {
 
   /**
@@ -38,7 +33,7 @@ export class Food {
    * @constructor
    * @access public
    */
-  constructor(max = WIDTH_UPPER_BOUND, min = WIDTH_LOWER_BOUND) {
+  constructor(max, min) {
     this._max = max;
     this._min = min;
     this._coordinates = this._generateFoodCoordinates();

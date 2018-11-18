@@ -1,15 +1,57 @@
 <!DOCTYPE>
-<html>
+<html lang="en">
   <head>
     <title>Fruit Fly Optimisation Algorithm</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
-    <div>
+    <div class="container">
+      <div class="navbar-header">
+        <h1>Fruit Fly Optimisation Algorithm</h1>
+      </div>
+    </div>
+    <div class="container">
+      <div role="main">
+        <form class="jumbotron">
+          <div class="form-group">
+            <label for="num-fruit-flies">Num fruit flies</label>
+            <input class="form-control" id="num-fruit-flies" name="num-fruit-flies" value="50" />
+          </div>
+          <div class="form-group">
+            <label for="num-trials">Num trials</label>
+            <input class="form-control" id="num-trials" name="num-trials" value="50" />
+          </div>
+          <div class="form-group">
+            <label for="num-iterations">Num iterations per trial</label>
+            <input class="form-control" id="num-iterations" name="num-iterations" value="700" />
+          </div>
+          <div class="form-group">
+            <label for="lower-bound">Search space lower bound</label>
+            <input class="form-control" id="lower-bound" name="lower-bound" value="-10" />
+          </div>
+          <div class="form-group">
+            <label for="upper-bound">Search space upper bound</label>
+            <input class="form-control" id="upper-bound" name="upper-bound" value="10" />
+          </div>
+          <div class="form-group">
+            <label for="chaotic-map-type">Chaotic map type</label>
+            <input class="form-control" id="chaotic-map-type" name="chaotic-map-type" value="chebyshev" />
+          </div>
+          <div class="form-group">
+            <label for="chaotic-map-dimension">Chaotic map dimension</label>
+            <input class="form-control" id="chaotic-map-dimension" name="chaotic-map-dimension" value="1" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="container">
       <pre class="plaintext">
         <code id="results">
         </code>
       </pre>
     </div>
     <script src="./foa.js"></script>
+    <script src="./index.js"></script>
   </body>
 </html>

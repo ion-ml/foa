@@ -1,15 +1,33 @@
 import { assert } from 'chai'; 
+
 import { Food } from '../src/food'; 
 import { FruitFlies } from '../src/fruitFlies'; 
 import { Swarm } from '../src/swarm'; 
 import { foa, smell, trial, vision } from '../src/foa'; 
 
+const lowerBound = -10;
+const upperBound = 10;
+
 describe('foa', function() {
   describe('foa', () => {
     it('should return results containing an object for each iterations', () => {
-      const food = new Food();
+      const food = new Food(
+        lowerBound,
+        upperBound
+      );
+      
       const numFruitFlies = 3;
-      const fruitFlies = new FruitFlies(food, numFruitFlies);
+
+      const fruitFlies = new FruitFlies(
+        food,
+        numFruitFlies,
+        null,
+        lowerBound,
+        upperBound,
+        'chebyshev',
+        1
+      );
+
       const bestPosition = fruitFlies.findBestPosition(food);
       const swarm = new Swarm(bestPosition);
       const numIterations = 100;
@@ -22,9 +40,22 @@ describe('foa', function() {
   describe('smell', () => {
     it(`should always contain numeric coordinates`, () => {
       // Arrange
-      const food = new Food();
+      const food = new Food(
+        lowerBound,
+        upperBound
+      );
+      
       const numFruitFlies = 3;
-      const fruitFlies = new FruitFlies(food, numFruitFlies);
+      
+      const fruitFlies = new FruitFlies(
+        food,
+        numFruitFlies,
+        null,
+        lowerBound,
+        upperBound,
+        'chebyshev',
+        1
+      );
 
       // Act
       const { fruitFlies: updatedFruitFlies } = smell(fruitFlies);
@@ -43,9 +74,23 @@ describe('foa', function() {
   describe('vision', () => {
     it('should always contain numeric coordinates', () => {
       // Arrange
-      const food = new Food();
+      const food = new Food(
+        lowerBound,
+        upperBound
+      );
+      
       const numFruitFlies = 3;
-      const fruitFlies = new FruitFlies(food, numFruitFlies);
+      
+      const fruitFlies = new FruitFlies(
+        food,
+        numFruitFlies,
+        null,
+        lowerBound,
+        upperBound,
+        'chebyshev',
+        1
+      );
+      
       const bestPosition = fruitFlies.findBestPosition(food);
       const swarm = new Swarm(bestPosition);
 
