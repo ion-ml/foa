@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.7.2 -> 0.7.3
+## 0.7.2 -> 0.7.4
 
 - The addition of `ASSIGNEMNET_ANSWERS.md`
 - Fix 'smell' function within FruitFly.
