@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.4.0
+
+- Fix instantiation buy resulting from the new params.
+
+---
+
 ## 0.3.0
 
 - The addition of HTML form fields to enable the variables to be added dynamically.

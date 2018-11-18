@@ -18,4 +18,8 @@ var trialResults = foa.trial(
   chaoticMapDimension
 );
 
-foa.printCsvDeltaPerSingleTrial(trialResults, el, numTrials);
+foa.printCsvDeltaPerSingleTrial(
+  trialResults,
+  el,
+  numTrials
+);

@@ -93,7 +93,7 @@ export const trial = (
       chaoticMapType,
       chaoticMapDimension
     );
-    
+
     bestPosition = fruitFlies.findBestPosition();
     swarm = new Swarm(bestPosition);
 
@@ -115,6 +115,7 @@ export const trial = (
  * @returns {[]}
  */
 export const vision = (food, fruitFlies, swarm) => {
+
   const bestPosition = fruitFlies.findBestPosition(food);
   const { smellConcentration } = bestPosition;
   const delta = swarm.vision(bestPosition);

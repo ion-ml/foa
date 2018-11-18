@@ -1,6 +1,10 @@
 import { alpha } from './alpha';
 
+const BASE_TEN = 10;
+const DELTA_LOWER_BOUND = -1;
+const DELTA_UPPER_BOUND = 1;
 const ROOT_POWER = 0.5;
+const SMELL_CONCENTRATION_DEFAULT = 0;
 const SQUARED_POWER = 2;
 
 export class FruitFly {
@@ -118,7 +122,7 @@ export class FruitFly {
     
     this._food = food;
     this._index = index;
-    this._smellConcentration = 0;
+    this._smellConcentration = SMELL_CONCENTRATION_DEFAULT;
     this._searchSpaceLowerBound = searchSpaceLowerBound;
     this._searchSpaceUpperBound = searchSpaceUpperBound;
     this._chaoticMapType = chaoticMapType;
@@ -147,8 +151,10 @@ export class FruitFly {
    * @since 0.1
    */
   smell() {
+    const lowerBound = parseInt(this.searchSpaceLowerBound, BASE_TEN);
+    const upperBound = parseInt(this.searchSpaceUpperBound, BASE_TEN);
+    
     const {
-      smellConcentration: smellBest,
       x: xBest,
       y: yBest,
     } = this.lastBestPosition;
@@ -158,39 +164,51 @@ export class FruitFly {
       y: yCurrent,
     } = this.coordinates;
 
-    const xDelta = xCurrent - xBest;
-    const yDelta = yCurrent - yBest;
+    let xDelta = ((xCurrent - xBest) / upperBound);
+    xDelta = xDelta > DELTA_UPPER_BOUND ? DELTA_UPPER_BOUND : xDelta;
+    xDelta = xDelta < DELTA_LOWER_BOUND ? DELTA_LOWER_BOUND : xDelta;
 
-    let xUpdated = xCurrent + alpha(
-      (xDelta / this.searchSpaceUpperBound),
+    let yDelta = ((yCurrent - yBest) / upperBound);
+    yDelta = yDelta > DELTA_UPPER_BOUND ? DELTA_UPPER_BOUND : yDelta;
+    yDelta = yDelta < DELTA_LOWER_BOUND ? DELTA_LOWER_BOUND : yDelta;
+
+    let xAlpha = alpha(
+      xDelta,
       this.chaoticMapType,
       this.chaoticMapDimension,
     );
 
-    let yUpdated = yCurrent + alpha(
-      (yDelta / this.searchSpaceUpperBound),
+    xAlpha = isNaN(xAlpha) ? Math.random() : xAlpha;
+    let xUpdated = xAlpha + xCurrent;
+
+    let yAlpha = alpha(
+      yDelta,
       this.chaoticMapType,
       this.chaoticMapDimension,
     );
-   
+
+
+    yAlpha = isNaN(yAlpha) ? Math.random() : yAlpha;
+    let yUpdated = yAlpha + yCurrent;
+
     // Enforce upper bound
-    if (xUpdated > this.searchSpaceUpperBound) {
-      xUpdated = this.searchSpaceUpperBound;
+    if (xUpdated > upperBound) {
+      xUpdated = upperBound;
     }
 
     // Enforce lower bound
-    if (xUpdated < this.searchSpaceLowerBound) {
-      xUpdated = this.searchSpaceLowerBound;
+    if (xUpdated < lowerBound) {
+      xUpdated = lowerBound;
     }
     
     // Enforce upper bound
-    if (yUpdated > this.searchSpaceUpperBound) {
-      yUpdated = this.searchSpaceUpperBound;
+    if (yUpdated > upperBound) {
+      yUpdated = upperBound;
     }
 
     // Enforce lower bound
-    if (yUpdated < this.searchSpaceLowerBound) {
-      yUpdated = this.searchSpaceLowerBound;
+    if (yUpdated < lowerBound) {
+      yUpdated = lowerBound;
     }
     
     const updatedCoordinates = {
@@ -206,7 +224,7 @@ export class FruitFly {
   transpose(delta) {
     const { x: xCurrent, y: yCurrent } = this.coordinates;
     const { x: xDelta, y: yDelta } = delta;
-    
+
     this._updateCoordinates({
       x: xCurrent - xDelta,
       y: yCurrent - yDelta,
@@ -221,13 +239,18 @@ export class FruitFly {
    * @access protected
    */
   _generateStartingCoordinates(rand = false) {
+    const lowerBound = parseInt(this.searchSpaceLowerBound, BASE_TEN);
+    const upperBound = parseInt(this.searchSpaceUpperBound, BASE_TEN);
+    
     const randX = (rand === false ? Math.random() : rand);
     const randY = (rand === false ? Math.random() : rand);
 
-    return {
-      x: this.searchSpaceLowerBound + ((this.searchSpaceUpperBound - this.searchSpaceLowerBound) * randX),
-      y: this.searchSpaceLowerBound + ((this.searchSpaceUpperBound - this.searchSpaceLowerBound) * randY),
+    const coordinates = {
+      x: lowerBound + (upperBound - lowerBound) + (lowerBound * randX),
+      y: lowerBound + (upperBound - lowerBound) + (lowerBound * randY),
     };
+
+    return coordinates;
   }
 
   /**
