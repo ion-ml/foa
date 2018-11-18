@@ -30,6 +30,8 @@ The main additional feature proposed by X is the incorporation of randomness wit
 
 > If the paper contains several algorithms, then choose only one and justify your choice.
 
+The chosen algorithm used a Chebyshev chaotic map and evaluated the sum of sqaures.
+A chaotic map is a periodic, pseudo chaotic distribution. A Chebyshev chaotic map takes the takes
 ---
 
 
@@ -38,7 +40,8 @@ The main additional feature proposed by X is the incorporation of randomness wit
 > Present and explain the main formulas that define the algorithm.
 
 
-The main formulas used within the FOA algorithm by X are as follows. Print to both the smell and the vision phase, the algorithm randomly allocates the food and the fruit flies to positions within the search space. The random allocation of the food has not been defined, explicitly. However, the random allocations of the fruit fly position has been, and it calculates (per coordinate) a pseudo random value within the pre-defined lower and upper bounds (of the search space).
+The main formulas used within the FOA algorithm by X are as follows.
+The algorithm starts by randomly allocating the food and the fruit flies to positions within the search space. The random allocation of the food has not been defined, explicitly. However, the random allocations of the fruit fly position has been, and it calculates (per coordinate) a pseudo random value within the pre-defined lower and upper bounds (of the search space).
 
 See append 1
 

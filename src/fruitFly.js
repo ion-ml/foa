@@ -6,7 +6,7 @@ const SMELL_CONCENTRATION_DEFAULT = 0;
 const SQUARED_POWER = 2;
 
 export class FruitFly {
-  
+
   /**
    * @property chaoticMapType
    * @type {string}
@@ -16,7 +16,7 @@ export class FruitFly {
   get chaoticMapType() {
     return this._chaoticMapType;
   }
-  
+
   /**
    * @property chaoticMapDimension
    * @type {number}
@@ -76,7 +76,7 @@ export class FruitFly {
   get smellConcentration() {
     return this._smellConcentration;
   }
-  
+
   /**
    * @property searchSpaceLowerBound
    * @type {number}
@@ -104,7 +104,7 @@ export class FruitFly {
    * @param {Food} food - The desired food object.
    * @param {Object<string, number>} coordinates - Pre-defined coordinates. Defaults to null.
    * @param {number} searchSpaceLowerBound - The lower bound width. Default to this.searchSpaceLowerBound.
-   * @param {number} searchSpaceUpperBound - The upper bound width. Defaults to this.searchSpaceUpperBound. 
+   * @param {number} searchSpaceUpperBound - The upper bound width. Defaults to this.searchSpaceUpperBound.
    *
    * @access public
    */
@@ -117,7 +117,7 @@ export class FruitFly {
     chaoticMapType,
     chaoticMapDimension
   ) {
-    
+
     this._food = food;
     this._index = index;
     this._smellConcentration = SMELL_CONCENTRATION_DEFAULT;
@@ -128,7 +128,7 @@ export class FruitFly {
 
     coordinates = coordinates === null ? this._generateStartingCoordinates() : coordinates;
     this._updateCoordinates(coordinates);
-    
+
     const lastBestPosition = Object.assign({}, coordinates);
     this._lastBestPosition = lastBestPosition;
   }
@@ -151,14 +151,14 @@ export class FruitFly {
       x: xBest,
       y: yBest,
     } = this.lastBestPosition;
-    
+
     const {
       x: xCurrent,
       y: yCurrent,
     } = this.coordinates;
 
-    const xDelta = xCurrent - xBest; 
-    const yDelta = yCurrent - yBest; 
+    const xDelta = xCurrent - xBest;
+    const yDelta = yCurrent - yBest;
 
     let xAlpha = alpha(
       xDelta,
@@ -166,7 +166,7 @@ export class FruitFly {
       this.chaoticMapDimension,
     );
 
-    let xUpdated = xDelta + xCurrent;
+    let xUpdated = xAlpha + xCurrent;
 
     let yAlpha = alpha(
       yDelta,
@@ -174,7 +174,7 @@ export class FruitFly {
       this.chaoticMapDimension,
     );
 
-    let yUpdated = yDelta + yCurrent;
+    let yUpdated = yAlpha + yCurrent;
 
     // Enforce upper bound
     if (xUpdated > upperBound) {
@@ -185,7 +185,7 @@ export class FruitFly {
     if (xUpdated < lowerBound) {
       xUpdated = lowerBound;
     }
-    
+
     // Enforce upper bound
     if (yUpdated > upperBound) {
       yUpdated = upperBound;
@@ -195,7 +195,7 @@ export class FruitFly {
     if (yUpdated < lowerBound) {
       yUpdated = lowerBound;
     }
-    
+
     const updatedCoordinates = {
       x: xUpdated,
       y: yUpdated,
@@ -226,10 +226,10 @@ export class FruitFly {
   _generateStartingCoordinates(rand = false) {
     const lowerBound = parseInt(this.searchSpaceLowerBound, BASE_TEN);
     const upperBound = parseInt(this.searchSpaceUpperBound, BASE_TEN);
-   
+
     const randX = (rand === false ? Math.random() : rand);
     const randY = (rand === false ? Math.random() : rand);
-   
+
     let diff = (upperBound - lowerBound);
 
     const x = lowerBound + (diff * randX);
@@ -259,12 +259,12 @@ export class FruitFly {
       this.chaoticMapType,
       this.chaoticMapDimension,
     );
-    
+
     if (this.smellConcentration > lastBestFruitFly.smellConcentration) {
       this._lastBestPosition = this.coordinates;
     }
   }
-  
+
   /**
    * Calculates the distance between the current FruitFly and the food.
    *
