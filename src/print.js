@@ -86,30 +86,33 @@ export const printCsvFoodSwarmCoordinatesPerIteration = (trialResults, el, numTr
   el.append(',');
   el.append('fruit_fly_10_coordinate_x');
   
-  const trialIndex = Math.floor(Math.random() * numTrials);
-  const iterationsPerSingleTrial = trialResults[trialIndex];
+  trialResults.forEach((iterationsPerSingleTrial, trialIndex) => {
+    iterationsPerSingleTrial.forEach((iteration, iterationIndex) => {
+      const { smell, vision } = iteration;
+      const { food, smellConcentration, swarm } = vision;
+      const { fruitFlies } = smell;
+      const { fruitFlies: fruitFlyInstances } = fruitFlies;
+      const { coordinates } = fruitFlyInstances[1];
+      const { x, y } = coordinates;
 
-  iterationsPerSingleTrial.forEach((iteration, iterationIndex) => {
-    const { vision } = iteration;
-    const { food, fruitFlies, smellConcentration, swarm } = vision;
-
-    el.append('\n');
-    el.append(trialIndex);
-    el.append(',');
-    el.append(iterationIndex);
-    el.append(',');
-    el.append(food.coordinates.x);
-    el.append(',');
-    el.append(food.coordinates.y);
-    el.append(',');
-    el.append(swarm.coordinates.x);
-    el.append(',');
-    el.append(swarm.coordinates.y);
-    el.append(',');
-    el.append(smellConcentration);
-    el.append(',');
-    el.append(fruitFlies.fruitFlies[10].coordinates.x);
-    el.append(',');
-    el.append(fruitFlies.fruitFlies[10].coordinates.y);
+      el.append('\n');
+      el.append(trialIndex);
+      el.append(',');
+      el.append(iterationIndex);
+      el.append(',');
+      el.append(food.coordinates.x);
+      el.append(',');
+      el.append(food.coordinates.y);
+      el.append(',');
+      el.append(swarm.coordinates.x);
+      el.append(',');
+      el.append(swarm.coordinates.y);
+      el.append(',');
+      el.append(smellConcentration);
+      el.append(',');
+      el.append(x);
+      el.append(',');
+      el.append(y);
+    });
   });
 }

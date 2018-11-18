@@ -8,10 +8,24 @@ describe('FruitFlies', function() {
   describe('bestPosition', () => {
     it('should return the fruit fly with the best position', () => {
       const expectedNumFruitFlies = 3;
-      const food = new Food();
+      const lowerBound = -10;
+      const upperBound = 10;
+
+      const food = new Food(
+        lowerBound,
+        upperBound
+      );
+      
       food._coordinates = { x: 1, y: 1 };
 
-      const fruitFlies = new FruitFlies(food, expectedNumFruitFlies);
+      const fruitFlies = new FruitFlies(
+        food,
+        expectedNumFruitFlies,
+        lowerBound,
+        upperBound,
+        'chebyshev',
+        1
+      );
      
       fruitFlies.fruitFlies[0]._updateCoordinates({ x: 100, y: 100 });
       fruitFlies.fruitFlies[1]._updateCoordinates({ x: -5, y: -30 });
@@ -24,24 +38,59 @@ describe('FruitFlies', function() {
   });
   describe('fruitFlies', () => {
     it('contains the expected number of FruitFlies', () => {
-      const expectedNumFruitFlies = 100;
-      const food = new Food();
-      const fruitFlies = new FruitFlies(food, expectedNumFruitFlies);
+      const lowerBound = -10;
+      const upperBound = 10;
 
-      assert.equal(fruitFlies.fruitFlies.length, expectedNumFruitFlies);
+      const expectedNumFruitFlies = 100;
+      
+      const food = new Food(
+        lowerBound,
+        upperBound
+      );
+      
+      const fruitFlies = new FruitFlies(
+        food,
+        expectedNumFruitFlies,
+        lowerBound,
+        upperBound,
+        'chebyshev',
+        1
+      );
+
+      assert.equal(
+        fruitFlies.fruitFlies.length,
+        expectedNumFruitFlies
+      );
     });
+    
     it('contains objects which are valid instance of FruitFly', () => {
-      const food = new Food();
+      const lowerBound = -10;
+      const upperBound = 10;
+      
+      const food = new Food(
+        lowerBound,
+        upperBound
+      );
+
       const expectedNumFruitFlies = 10;
-      const fruitFlies = new FruitFlies(food, expectedNumFruitFlies);
+      
+      const fruitFlies = new FruitFlies(
+        food,
+        expectedNumFruitFlies,
+        lowerBound,
+        upperBound,
+        'chebyshev',
+        1
+      );
 
       fruitFlies.fruitFlies.forEach(fruitFly => {
         assert.instanceOf(fruitFly, FruitFly);
       });
     });
+    
     it('contains objects with numeric coordinates', () => {
-      const lowerBound = -10;
-      const upperBound = 10;
+      const lowerBound = 0;
+      const upperBound = 100;
 
       const food = new Food(
         lowerBound,
@@ -53,14 +102,13 @@ describe('FruitFlies', function() {
       const fruitFlies = new FruitFlies(
         food,
         expectedNumFruitFlies,
-        null,
         lowerBound,
         upperBound,
         'chebyshev',
         1
       );
 
-      fruitFlies.fruitFlies.forEach(fruitFly => {
+      fruitFlies.fruitFlies.forEach((fruitFly) => {
         const { x, y } = fruitFly.coordinates;
         assert.isNotNaN(x);
         assert.isNotNaN(y);
@@ -70,11 +118,29 @@ describe('FruitFlies', function() {
 
   describe('length', () => {
     it('constructs the required number of FruitFlies', () => {
-      const food = new Food();
-      const expectedNumFruitFlies = 100;
-      const fruitFlies = new FruitFlies(food, expectedNumFruitFlies);
+      const lowerBound = -10;
+      const upperBound = 10;
+      
+      const food = new Food(
+        lowerBound,
+        upperBound
+      );
 
-      assert.equal(fruitFlies.length, expectedNumFruitFlies);
+      const expectedNumFruitFlies = 100;
+      
+      const fruitFlies = new FruitFlies(
+        food,
+        expectedNumFruitFlies,
+        lowerBound,
+        upperBound,
+        'chebyshev',
+        1
+      );
+
+      assert.equal(
+        fruitFlies.length, 
+        expectedNumFruitFlies
+      );
     });
   });
 });

@@ -13,15 +13,16 @@ describe('Swarm', function() {
     it(`should be instantiated with the coordinates of the bestPosition`, () => {
       const numFruitFlies = 5;
       const food = new Food(lowerBound, upperBound);
+
       const fruitFlies = new FruitFlies(
         food,
         numFruitFlies,
-        null,
         lowerBound,
         upperBound,
         'chebyshev',
         1
       );
+
       const bestPosition = fruitFlies.findBestPosition();
 
       const { coordinates: coordinatesBest } = bestPosition;

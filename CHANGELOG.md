@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.6.0
+
+- Improve output.
+- Prevent NaN values.
+
+---
+
 ## 0.5.0
 
 - The addition of a 'Run' button

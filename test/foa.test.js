@@ -21,7 +21,6 @@ describe('foa', function() {
       const fruitFlies = new FruitFlies(
         food,
         numFruitFlies,
-        null,
         lowerBound,
         upperBound,
         'chebyshev',
@@ -50,7 +49,6 @@ describe('foa', function() {
       const fruitFlies = new FruitFlies(
         food,
         numFruitFlies,
-        null,
         lowerBound,
         upperBound,
         'chebyshev',
@@ -84,7 +82,6 @@ describe('foa', function() {
       const fruitFlies = new FruitFlies(
         food,
         numFruitFlies,
-        null,
         lowerBound,
         upperBound,
         'chebyshev',

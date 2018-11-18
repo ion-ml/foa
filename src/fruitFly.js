@@ -128,15 +128,9 @@ export class FruitFly {
     this._chaoticMapType = chaoticMapType;
     this._chaoticMapDimension = chaoticMapDimension;
 
-    if (coordinates === null) {
-      this._updateCoordinates(
-        this._generateStartingCoordinates()
-      );
+    coordinates = coordinates === null ? this._generateStartingCoordinates() : coordinates;
 
-    } else {
-      this._updateCoordinates(coordinates);
-    }
-
+    this._updateCoordinates(coordinates);
     this._lastBestPosition = Object.assign({}, this.coordinates);
   }
 
@@ -165,7 +159,12 @@ export class FruitFly {
     } = this.coordinates;
 
     let xDelta = ((xCurrent - xBest) / upperBound);
+    xDelta = xDelta > DELTA_UPPER_BOUND ? DELTA_UPPER_BOUND : xDelta;
+    xDelta = xDelta < DELTA_LOWER_BOUND ? DELTA_LOWER_BOUND : xDelta;
+
     let yDelta = ((yCurrent - yBest) / upperBound);
+    yDelta = yDelta > DELTA_UPPER_BOUND ? DELTA_UPPER_BOUND : yDelta;
+    yDelta = yDelta < DELTA_LOWER_BOUND ? DELTA_LOWER_BOUND : yDelta;
 
     let xAlpha = alpha(
       xDelta,
@@ -174,6 +173,7 @@ export class FruitFly {
     );
 
     let xUpdated = xAlpha + xCurrent;
+    xUpdated = isNaN(xUpdated) ? xCurrent + Math.random() : xUpdated;
 
     let yAlpha = alpha(
       yDelta,
@@ -183,6 +183,7 @@ export class FruitFly {
 
 
     let yUpdated = yAlpha + yCurrent;
+    yUpdated = isNaN(yUpdated) ? yCurrent + Math.random() : yUpdated;
 
     // Enforce upper bound
     if (xUpdated > upperBound) {
@@ -234,16 +235,16 @@ export class FruitFly {
   _generateStartingCoordinates(rand = false) {
     const lowerBound = parseInt(this.searchSpaceLowerBound, BASE_TEN);
     const upperBound = parseInt(this.searchSpaceUpperBound, BASE_TEN);
-    
+   
     const randX = (rand === false ? Math.random() : rand);
     const randY = (rand === false ? Math.random() : rand);
+   
+    let diff = (upperBound - lowerBound);
 
-    const coordinates = {
-      x: lowerBound + ((upperBound - lowerBound) * randX),
-      y: lowerBound + ((upperBound - lowerBound) * randY),
-    };
+    const x = lowerBound + (diff * randX);
+    const y = lowerBound + (diff * randY);
 
-    return coordinates;
+    return { x, y };
   }
 
   /**
@@ -253,7 +254,7 @@ export class FruitFly {
    * @access protected.
    */
   _updateCoordinates(coordinates) {
-    this._coordinates = coordinates;
+    this._coordinates = Object.assign({}, coordinates);
     this._updateSmellConcentration(this.food);
   }
 
