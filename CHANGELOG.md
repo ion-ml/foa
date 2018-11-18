@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.7.0
+
+- Additional 'alpha' functions to clean both 'alpha' and 'delta'.
+- Fixes to prevent 'NaN' values.
+
+---
+
 ## 0.6.0
 
 - Improve output.

@@ -1,8 +1,6 @@
 import { alpha } from './alpha';
 
 const BASE_TEN = 10;
-const DELTA_LOWER_BOUND = -1;
-const DELTA_UPPER_BOUND = 1;
 const ROOT_POWER = 0.5;
 const SMELL_CONCENTRATION_DEFAULT = 0;
 const SQUARED_POWER = 2;
@@ -129,9 +127,10 @@ export class FruitFly {
     this._chaoticMapDimension = chaoticMapDimension;
 
     coordinates = coordinates === null ? this._generateStartingCoordinates() : coordinates;
-
     this._updateCoordinates(coordinates);
-    this._lastBestPosition = Object.assign({}, this.coordinates);
+    
+    const lastBestPosition = Object.assign({}, coordinates);
+    this._lastBestPosition = lastBestPosition;
   }
 
   /**
@@ -147,7 +146,7 @@ export class FruitFly {
   smell() {
     const lowerBound = parseInt(this.searchSpaceLowerBound, BASE_TEN);
     const upperBound = parseInt(this.searchSpaceUpperBound, BASE_TEN);
-    
+
     const {
       x: xBest,
       y: yBest,
@@ -158,13 +157,8 @@ export class FruitFly {
       y: yCurrent,
     } = this.coordinates;
 
-    let xDelta = ((xCurrent - xBest) / upperBound);
-    xDelta = xDelta > DELTA_UPPER_BOUND ? DELTA_UPPER_BOUND : xDelta;
-    xDelta = xDelta < DELTA_LOWER_BOUND ? DELTA_LOWER_BOUND : xDelta;
-
-    let yDelta = ((yCurrent - yBest) / upperBound);
-    yDelta = yDelta > DELTA_UPPER_BOUND ? DELTA_UPPER_BOUND : yDelta;
-    yDelta = yDelta < DELTA_LOWER_BOUND ? DELTA_LOWER_BOUND : yDelta;
+    const xDelta = xCurrent - xBest; 
+    const yDelta = yCurrent - yBest; 
 
     let xAlpha = alpha(
       xDelta,
@@ -172,8 +166,7 @@ export class FruitFly {
       this.chaoticMapDimension,
     );
 
-    let xUpdated = xAlpha + xCurrent;
-    xUpdated = isNaN(xUpdated) ? xCurrent + Math.random() : xUpdated;
+    let xUpdated = xDelta + xCurrent;
 
     let yAlpha = alpha(
       yDelta,
@@ -181,9 +174,7 @@ export class FruitFly {
       this.chaoticMapDimension,
     );
 
-
-    let yUpdated = yAlpha + yCurrent;
-    yUpdated = isNaN(yUpdated) ? yCurrent + Math.random() : yUpdated;
+    let yUpdated = yDelta + yCurrent;
 
     // Enforce upper bound
     if (xUpdated > upperBound) {
@@ -255,7 +246,7 @@ export class FruitFly {
    */
   _updateCoordinates(coordinates) {
     this._coordinates = Object.assign({}, coordinates);
-    this._updateSmellConcentration(this.food);
+    this._updateSmellConcentration();
   }
 
   _updateLastBestPosition() {
