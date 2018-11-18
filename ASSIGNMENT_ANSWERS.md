@@ -59,11 +59,11 @@ Per iteration, the swarm moves toward the fruit fly with the maximum smell conce
 
 ### Q 2.b
 
-The parameters used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) are as follows:
+The parameters used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) for the Chebyshev chaotic map / Sum Squares combination are as follows:
 
 - Number of fruit flies = 30
 - Number of trials = 50
-- Iterations = 700
+- Iterations per trial = 700
 - Search space lower bound = -10
 - Search space upper bound = 10
 
@@ -79,19 +79,22 @@ The parameters used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) are as follo
 
 > Explain your approach towards the reproduction of the algorithm of the paper:
 
-The approach taken to reproduce the algorithm described by Mitic, Vukovic, Petrovic and Miljkoiv (2015) was primarily motivated by portability. Consequently, the code associated with this assignment has been written in JavaScript. This means that it can be run on any web browser. Potential problems that might have arisen had the algorithm have been written in a specific version of a language / specific operating system should have been avoided.
+The approach taken to reproduce the algorithm described by Mitic, Vukovic, Petrovic and Miljkoiv (2015) was primarily motivated by portability. Consequently, the code associated with this assignment has been written in JavaScript. This means that it can be run within any web browser. Thus, potential problems that might have arisen had the algorithm have been written in a specific version of a language / specific operating system should have been avoided.
 
-The JavaScript code contains a separate class for each of the key components within the algorithm.
-- The `src/food.js` class defines all of the search space coordinates of the food.
+In order to load the algorithm into a browser navigate to `dist/index.html`, which displays a form containing fields representing the algorithm's parameters. The fields have default values for the Chebyshev chaotic map / Sum Squares combination. Modify the parameters as appropriate. Then click the `run` button beneath the form. The results should then be printed at the bottom of the page.
+
+The JavaScript code contains a separate module for each of the algorithm's key components.
+- The `src/food.js` class defines the coordinates of the food.
 - The `src/fruitFly.js` class defines the coordinates and all of the processes that can be applied to a fruit fly.
-- The `src/fruitFlies.js` aggregates the fruit flies and handled communication between them and the swarm.
+  - This class also retains the coordinates of the best position per fruit fly.
+- The `src/fruitFlies.js` aggregates the fruit flies and handles communication between them and the swarm.
 - The `src/swarm.js` class represents the swarm.
 - `src/alpha.js` contains functions handling the Chebyshev chaotic map.
-- Finally, `src/foa.js` contains functions representing the phases of the algorithm, including `smell` and `vision`.
+- Finally, `src/foa.js` contains functions representing the algorithm's phases, such as `smell` and `vision`.
 
-In addition, `src/print.js` contains a function that prints the algorithm's results onto the web page in Comma Delimited Format (CSV).
+In addition, `src/print.js` contains a function that prints the algorithm's results onto the loaded web page in `.csv` format, enabling the data to be easily copied into other statistical / charting software.
 
-Further information about the build and testing process used for the code above can be found within the `README.md`.
+Further information about how to load the algorithm, along with the build and testing process for the code modules described above, can be found within the `README.md` file at the root of the code-base.
 
 ---
 
@@ -99,16 +102,41 @@ Further information about the build and testing process used for the code above 
 
 > What simplifications had to be made?
 
-Chaotic map
-- values between -1 and 1
 
+The other key simplification
 
+movement of swarm
+find smell concentration per fruit fly
+Automatically updated after each change of coordinates (see )
+best position (with regard to the function being optimised)
+
+calculate delta between best position and Swarm
+apply that delta to each fruit fly.
+
+The latter step wasn't explicity defined by Mitic, Vukovic, Petrovic and Miljkoiv (2015)
+
+---
+
+Initial position of the food
+Used the same algorithm as per the fruit flies
+
+`fruitFly = lowerBound + (upperBound - lowerBound  * rand())`
+
+However, NUM FOOD - ISSUE
 
 ---
 
 ### Q 4.c
 
 > What parameter values had to be inferred?
+
+Chaotic map
+- values between -1 and 1
+- JavaScript coordinates
+- Separate calls for x and y
+- See the smell function
+- subsequent limit
+- Addition of a cleaning step - values greater than 1 divided by the upper bound.
 
 ---
 
