@@ -1,6 +1,12 @@
 # CHANGELOG
 
-## 0.7.1
+## 0.7.2
+
+- The addition of `ASSIGNEMNET_ANSWERS.md`
+
+---
+
+## 0.7.1 
 
 - Addition `printCsvCoordinatesPerIteration` function.
 

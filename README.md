@@ -32,16 +32,3 @@
 
 
 ---
-
-## Outstanding questions
-
-- Invoice
-- Email Edinburgh about resigning from two courses
-- PSO
-- Others not summary
-
-- Fix NaN
-
-- Summary
-
-
