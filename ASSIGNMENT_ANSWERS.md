@@ -1,13 +1,5 @@
 ## Assignment answers
 
-### TODO
-
-- Q 3
-- Q 4.b
-- Q 4.c
-- Q 4.d
-- Q 5 - differences PSO
-
 ---
 
 ### Q 1.a
@@ -81,7 +73,7 @@ The parameters used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) for the Cheb
 
 The approach taken to reproduce the algorithm described by Mitic, Vukovic, Petrovic and Miljkoiv (2015) was primarily motivated by portability. Consequently, the code associated with this assignment has been written in JavaScript. This means that it can be run within any web browser. Thus, potential problems that might have arisen had the algorithm have been written in a specific version of a language / specific operating system should have been avoided.
 
-In order to load the algorithm into a browser navigate to `dist/index.html`, which displays a form containing fields representing the algorithm's parameters. The fields have default values for the Chebyshev chaotic map / Sum Squares combination. Modify the parameters as appropriate. Then click the `run` button beneath the form. The results should then be printed at the bottom of the page.
+In order to load the algorithm into a browser navigate to `dist/index.html`, which displays a form containing fields representing the algorithm's parameters. The fields have default values for the Chebyshev chaotic map / Sum Squares combination. Modify the parameters as appropriate. Then click the `run` button beneath the form and the results should then be printed at the bottom of the page.
 
 The JavaScript code contains a separate module for each of the algorithm's key components.
 - The `src/food.js` class defines the coordinates of the food.
@@ -92,9 +84,9 @@ The JavaScript code contains a separate module for each of the algorithm's key c
 - `src/alpha.js` contains functions handling the Chebyshev chaotic map.
 - Finally, `src/foa.js` contains functions representing the algorithm's phases, such as `smell` and `vision`.
 
-In addition, `src/print.js` contains a function that prints the algorithm's results onto the loaded web page in `.csv` format, enabling the data to be easily copied into other statistical / charting software.
+In addition, `src/print.js` contains a function that prints the algorithm's results onto the loaded web page in `.csv` format, enabling the data to be easily copied into statistical / charting software.
 
-Further information about how to load the algorithm, along with the build and testing process for the code modules described above, can be found within the `README.md` file at the root of the code-base.
+Further information about how to load the algorithm (along with a description of the build and testing process for the modules described above) can be found within the `README.md` file at the root of the code-base.
 
 ---
 
