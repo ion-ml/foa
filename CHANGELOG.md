@@ -1,8 +1,15 @@
 # CHANGELOG
 
+## 0.8.3
+
+- Fixed
+
+---
+
 ## 0.8.2
 
 - Refactor the `FruitFly` class to simplify the `smell` method.
+- Tests failing!
 
 ---
 
