@@ -1,14 +1,15 @@
-export const printCsvResultsPerTrial = (trialResults, el, numTrials) => {
-  const bestTrial = trialResults.reduce((min, iterationsPerTrial, trialIndex) => {
-    const finalIteration = iterationsPerTrial[numTrials -1];
-    const { vision } = finalIteration;
-    const { smellConcentration } = vision;
+const SQUARED_POWER = 2;
+const SUCCESS_CRITERIA = 10000;
 
-    if (typeof min.smellConcentration === 'undefined') return { smellConcentration, trialIndex };
+export const printCsvResultsPerTrial = (
+  trialResults,
+  el, 
+  numTrials,
+  lowerBound,
+  upperBound
+) => {
 
-    return (smellConcentration < min.smellConcentration ? { smellConcentration, trialIndex } : min);
-  }, { smellConcentration: undefined, trialIndex: undefined});
-
+  const bestTrial = findBestTrial(trialResults);
   let successes = 0;
 
   el.append('\n\n');
@@ -43,16 +44,16 @@ export const printCsvResultsPerTrial = (trialResults, el, numTrials) => {
     const { smell, vision } = finalIteration;
     const { food, bestPosition, fruitFlies, smellConcentration, swarm } = vision;
 
-    const bestDistance = bestTrial.smellConcentration * Math.pow(bestTrial.smellConcentration, 2);
-    const currentDistance = smellConcentration * Math.pow(smellConcentration, 2);
-    const success = (currentDistance - bestDistance) <= (20 / 100); 
+    const bestDistance = bestTrial.smellConcentration * Math.pow(bestTrial.smellConcentration, SQUARED_POWER);
+    const currentDistance = smellConcentration * Math.pow(smellConcentration, SQUARED_POWER);
+    const success = (currentDistance - bestDistance) <= ((upperBound - lowerBound) / SUCCESS_CRITERIA); 
 
     if (success) successes++;
 
     el.append('\n');
     el.append(trialIndex);
     el.append(',');
-    el.append((currentDistance - bestDistance) <= (20 / 10000)); 
+    el.append(success); 
     el.append(',');
     el.append(bestDistance);
     el.append(',');
@@ -78,3 +79,17 @@ export const printCsvResultsPerTrial = (trialResults, el, numTrials) => {
   el.append('\n\n');
   el.append(`Num successes ${successes}. ${successes / 50}`);
 }
+
+const findBestTrial = (trialResults) => {
+  
+  return trialResults.reduce((min, iterationsPerTrial, trialIndex) => {
+    
+    const finalIteration = iterationsPerTrial[numTrials -1];
+    const { vision } = finalIteration;
+    const { smellConcentration } = vision;
+
+    if (typeof min.smellConcentration === 'undefined') return { smellConcentration, trialIndex };
+
+    return (smellConcentration < min.smellConcentration ? { smellConcentration, trialIndex } : min);
+  }, { smellConcentration: undefined, trialIndex: undefined});
+};
