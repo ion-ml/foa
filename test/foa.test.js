@@ -97,9 +97,8 @@ describe('foa', function() {
       // Assert
       const { fruitFlies: updatedFruitFlies } = results;
 
-      updatedFruitFlies.fruitFlies.forEach((fruitFly) => {
-        const { coordinates } = fruitFly;
-        const { x, y } = coordinates;
+      updatedFruitFlies.forEach((fruitFly) => {
+        const { x, y } = fruitFly;
 
         assert.isNotNaN(x);
         assert.isNotNaN(y);

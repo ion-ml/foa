@@ -1,5 +1,18 @@
 # CHANGELOG
 
+
+## 0.8.3
+
+- Fixed
+
+---
+
+## 0.8.2
+
+- Broken
+
+---
+
 ## 0.8.1
 
 - Inclusion of success criteria.

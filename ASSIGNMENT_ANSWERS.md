@@ -119,7 +119,7 @@ Another modification that was made concerned the movement of the swarm. Per iter
 
 A further modification concerned the calculation used to determine the initial position of the food. This was not defined by Mitic, Vukovic, Petrovic and Miljkoiv (2015). However, it was assumed that the calculation would be identical to one used for the generation of the initial fruit fly positions. The method that performs this calculation is called `generateFoodCoordinates` and it can be found within the `src/food.js` class between lines `44` and `55`.
 
-Lastly, the `alpha` function, which contains the Chebyshev chaotic map, only accepts values between `-1` and `1`. However, the values being passed to `alpha` are the difference between the fruit fly's current and best positions. In the majority of cases, such positional values would be greater than the `-1` to '1' boundary. Consequently, the fruit fly's current and best positions are normalised (by dividing both of them by the upper bound of the search space). This is performed by the `smell` method within `src/fruitFly.js` between lines `155` and `231`.
+Lastly, the `alpha` function, which contains the Chebyshev chaotic map, only accepts values between `-1` and `1`. However, the values being passed to `alpha` are the difference between the fruit fly's current and best positions. In the majority of cases, such positional values were greater than the `-1` to '1' boundary. Consequently, the fruit fly's current and best positions have been normalised (by dividing both of them by the upper bound of the search space). This is performed by the `smell` method within `src/fruitFly.js` between lines `155` and `231`.
 
 ---
 
@@ -211,3 +211,4 @@ With regard to the speed of running the JavaScript based algorithm within a brow
 ### Q7.d
 
 > How (or how not) to interpret the results
+
