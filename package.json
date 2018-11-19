@@ -1,6 +1,6 @@
 {
   "name": "fruitflies",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "A FruitFly Optimisation Algorithm",
   "main": "./dist/foa.js",
   "scripts": {
