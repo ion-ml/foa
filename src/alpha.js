@@ -1,3 +1,4 @@
+export const ALPHA_STARTING_VALUE = 0.7;
 export const CHEBYSHEV_DELTA_LOWER_BOUND = -1;
 export const CHEBYSHEV_DELTA_UPPER_BOUND = 1;
 

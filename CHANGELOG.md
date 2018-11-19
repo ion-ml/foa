@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.8.0
+
+- Additional answers.
+- Change the `findBestPosition` method to find the min fruitFly.
+- Starting value for ALPHA.
+- modify the `smell` method within `FruitFly` to use an `alpha` value based upon `smell concentration`.
+ 
+---
+
 ## 0.7.2 -> 0.7.4
 
 - The addition of `ASSIGNEMNET_ANSWERS.md`

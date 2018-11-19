@@ -4,7 +4,7 @@ const ROOT_POWER = 0.5;
 const SQUARED_POWER = 2;
 
 export class FruitFlies {
-  
+
   /**
    * @property chaoticMapType
    * @type {string}
@@ -14,7 +14,7 @@ export class FruitFlies {
   get chaoticMapType() {
     return this._chaoticMapType;
   }
-  
+
   /**
    * @property chaoticMapDimension
    * @type {number}
@@ -24,7 +24,7 @@ export class FruitFlies {
   get chaoticMapDimension() {
     return this._chaoticMapDimension;
   }
-  
+
   /**
    * @property food
    * @type {Food}
@@ -34,7 +34,7 @@ export class FruitFlies {
   get food() {
     return this._food;
   }
-  
+
   /**
    * @property fruitFlies
    * @type {[FruitFly]}
@@ -54,7 +54,7 @@ export class FruitFlies {
   get length() {
     return this._fruitFlies.length;
   }
-  
+
   /**
    * @property searchSpaceLowerBound
    * @type {number}
@@ -74,7 +74,7 @@ export class FruitFlies {
   get searchSpaceUpperBound() {
     return this._searchSpaceUpperBound;
   }
-  
+
   /**
    * @constructor
    *
@@ -99,7 +99,7 @@ export class FruitFlies {
 
     this._generateFruitFlies(numFruitFlies);
   }
-  
+
   /**
    * Find the best position with regard to f(x)
    *
@@ -113,7 +113,7 @@ export class FruitFlies {
         fruitFly.smellConcentration,
         SQUARED_POWER
       );
-      
+
       const maxFx = Math.pow(
         max.smellConcentration,
         SQUARED_POWER

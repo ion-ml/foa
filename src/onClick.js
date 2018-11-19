@@ -19,7 +19,7 @@ export const onClick = (e) => {
     chaoticMapDimension
   );
 
-  foa.printCsvCoordinatesPerIteration(
+  foa.printCsvResultsPerTrial(
     trialResults,
     el,
     numIterations

@@ -1,14 +1,16 @@
-export const printCsvCoordinatesPerIteration = (trialResults, el, numIterations) => {
+export const printCsvResultsPerTrial = (trialResults, el, numTrials) => {
   el.append('\n\n');
-  el.append('CSV: food swarm coordinates per iteration');
+  el.append('CSV: food swarm coordinates per trial');
   el.append('\n\n');
   el.append('trial_index');
-  el.append(',');
-  el.append('iteration_index');
   el.append(',');
   el.append('food_coordinate_x');
   el.append(',');
   el.append('food_coordinate_y');
+  el.append(',');
+  el.append('best_position_x');
+  el.append(',');
+  el.append('best_position_y');
   el.append(',');
   el.append('swarm_coordinate_x');
   el.append(',');
@@ -16,45 +18,26 @@ export const printCsvCoordinatesPerIteration = (trialResults, el, numIterations)
   el.append(',');
   el.append('smell_concentration');
 
-  for (var i = 0; i < numIterations; i++) {
+  trialResults.forEach((iterationsPerTrial, trialIndex) => {
+    const finalIteration = iterationsPerTrial[numTrials -1];
+    const { smell, vision } = finalIteration;
+    const { food, bestPosition, fruitFlies, smellConcentration, swarm } = vision;
+
+    el.append('\n');
+    el.append(trialIndex);
     el.append(',');
-    el.append(`fruit_fly_${i}_x`);
+    el.append(food.x);
     el.append(',');
-    el.append(`fruit_fly_${i}_y`);
-  }
-  
-  trialResults.forEach((iterationsPerSingleTrial, trialIndex) => {
-    iterationsPerSingleTrial.forEach((iteration, iterationIndex) => {
-      const { smell, vision } = iteration;
-      const { food, smellConcentration, swarm } = vision;
-      const { fruitFlies } = smell;
-      const { fruitFlies: fruitFlyInstances } = fruitFlies;
-
-      el.append('\n');
-      el.append(trialIndex);
-      el.append(',');
-      el.append(iterationIndex);
-      el.append(',');
-      el.append(food.coordinates.x);
-      el.append(',');
-      el.append(food.coordinates.y);
-      el.append(',');
-      el.append(swarm.coordinates.x);
-      el.append(',');
-      el.append(swarm.coordinates.y);
-      el.append(',');
-      el.append(smellConcentration);
-
-      fruitFlyInstances.forEach((fruitFly) => {
-
-        const { coordinates } = fruitFly;
-        const { x, y } = coordinates;
-
-        el.append(',');
-        el.append(x);
-        el.append(',');
-        el.append(y);
-      });
-    });
+    el.append(food.y);
+    el.append(',');
+    el.append(bestPosition.x);
+    el.append(',');
+    el.append(bestPosition.y);
+    el.append(',');
+    el.append(swarm.x);
+    el.append(',');
+    el.append(swarm.y);
+    el.append(',');
+    el.append(smellConcentration);
   });
 }

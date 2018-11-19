@@ -122,5 +122,17 @@ export const vision = (food, fruitFlies, swarm) => {
 
   fruitFlies.transpose(delta);
 
-  return { bestPosition, delta, food, fruitFlies, smellConcentration, swarm };
+  const bestPositionCoordinates = bestPosition.coordinates;
+  const foodCoordinates = food.coordinates;
+  const fruitFlyCoordinates = fruitFlies._findAllCoordinates();
+  const swarmCoordinates = swarm.coordinates;
+
+  return {
+    bestPosition: bestPositionCoordinates,
+    delta,
+    food: foodCoordinates,
+    fruitFlies: fruitFlyCoordinates,
+    smellConcentration,
+    swarm: swarmCoordinates,
+  };
 };

@@ -12,7 +12,7 @@ FOA algorithms model the movement of a swarm of fruit flies towards food. They d
 
 There are two main phases within FOA algorithms. In the first of them, the smell phase, the concentration of the smell of food associated with each fruit fly is calculated. The fruit flies closest to the location of the food should be associated with a greater smell concentrations. In the second phase, the vision phase, the swarm moves towards the fruit fly associated with the greatest smell concentration. After repeated iterations of the these phases the swarm should converge on the food.
 
-The main additional feature proposed by Mitic, Vukovic, Petrovic and Miljkoiv (2015) is the incorporation of randomness within the smell phase. X suggests that this will improve the speed (measured by number of iterations) with which the swarm converges upon the food. This appears to be a reasonably convincing argument. However, it might be the case that exploration is being favoured over exploitation. That is, there may be values for which X’s algorithm is not faster than a standard FOA.
+The main additional feature proposed by Mitic, Vukovic, Petrovic and Miljkoiv (2015) is the incorporation of randomness within the smell phase. They suggested that this will improve the speed (measured by number of iterations) with which the swarm converges upon the food and, thereby, optimises the required function. This appears to be a convincing argument. However, it might be the case that exploration is being favoured over exploitation. That is, there may be values for which the algorithm proposed by Mitic, Vukovic, Petrovic and Miljkoiv (2015) is not faster than a standard FOA.
 
 ---
 
@@ -20,9 +20,9 @@ The main additional feature proposed by Mitic, Vukovic, Petrovic and Miljkoiv (2
 
 > If the paper contains several algorithms, then choose only one and justify your choice.
 
-The chosen algorithm used a Chebyshev chaotic map. Chaotic maps are functions that exhibit chaotic behaviour. more specifically, a Chebyshev chaotic map takes the cosine of the inverse cosine of a value. This produces results between -1 and 1. The Chebyshev chaotic map was found to be the most successful map used by X, which was why it was chosen to be reproduced within this assignment.
+The chosen algorithm used a Chebyshev chaotic map. Chaotic maps are functions that exhibit chaotic behaviour. more specifically, a Chebyshev chaotic map takes the cosine of the inverse cosine of a value. This produces results between -1 and 1. The Chebyshev chaotic map was found to be the most successful map used by Mitic, Vukovic, Petrovic and Miljkoiv (2015), which was why it was chosen to be reproduced within this assignment.
 
-In addition, the algorithm used by X evaluated serval functions. One of the most successful was Sum of Squares, which has been used within this assignment.
+In addition, the algorithm used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) optimised standard functions. One of the most successful was Sum of Squares, which has been used within this assignment.
 
 ---
 
@@ -31,27 +31,39 @@ In addition, the algorithm used by X evaluated serval functions. One of the most
 
 > Present and explain the main formulas that define the algorithm.
 
-The main formulas used within the FOA algorithm by X are as follows.
+The main formulas used within the FOA algorithm by Mitic, Vukovic, Petrovic and Miljkoiv (2015) are as follows.
 
 The algorithm starts by randomly allocating the food and the fruit flies to positions within the search space. The random allocation of the food has not been defined, explicitly. However, the random allocations of the fruit fly position was defined. The definition calculates a pseudo random value based upon the pre-defined lower and upper bounds (of the search space).
 
-`fruitFly = lowerBound + (upperBound - lowerBound  * rand())`
+```JavaScript
+// PSEUDO CODE
+
+fruitFly = lowerBound + (upperBound - lowerBound  * rand());
+```
 
 Within the smell phase, fruit flies are pseudo randomly re-positioned with regard to their previous best position. This is defined using the following formula:
 
-`fruitFly (nextPosition) = fruitFly (currentPosition) + alpha(currentPosition - bestPosition)`
+```JavaScript
+// PSEUDO CODE
+
+fruitFly (nextPosition) = fruitFly (currentPosition) + alpha(currentPosition - bestPosition);
+```
 
 Within the vision phase, the smell concentration per fruit fly is defined by the inverse of the distance between the fruit fly and the food. Smell concentration increases as the distance between a given fruit fly and the food decreases. Conversely, smell concentration decreases as the distance between a given fruit fly and the food increases. 
 
 Per iteration, the swarm moves toward the fruit fly with the maximum smell concentration. This process is defined by the following formula:
 
-`xBest = min (smellConcentration per fruit fly)`
+```JavaScript
+// PSEUDO CODE
+
+xBest = min (smellConcentration per fruit fly);
+```
 
 ---
 
 ### Q 2.b
 
-The parameters used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) for the Chebyshev chaotic map / Sum Squares combination are as follows:
+The parameters used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) for the Chebyshev chaotic map / Sum Squares algorithm are as follows:
 
 - Number of fruit flies = 30
 - Number of trials = 50
@@ -92,35 +104,15 @@ Further information about how to load the algorithm (along with a description of
 
 ### Q 4.b
 
-> What simplifications had to be made?
+> What simplifications or modifications had to be made?
 
+One simplification that was made concerns the calculation of the fruit fly with the best position. This calculation is made within the algorithm's vision phase. The pseudo code provided by Mitic, Vukovic, Petrovic and Miljkoiv (2015) indicates that the best positioned fruit fly would have the lowest smell concentration (with regard to the function being optimised). Smell concentration is the inverse of the distance between a fruit fly and the food. A fruit fly with the minimum smell concentration is the one furthest from the food. Consequently, the best position calculation was modified to find the maximum smell concentration with regard to the function being optimised. The method that performs this calculation is called `findBestPosition` and it can be found within the `src/fruitFlies.js` class between lines `108` and `124`.   
 
-The other key simplification
+Another modification that had to be made concerns the movement of the swam. Per iteration, the swarm moves towards the fruit fly with the best position. It was assumed that the difference between the swarm's `n` and `n+1` positions should be applied to all of the fruit flies. The method that performs this calculation is called `transpose` and it can be found within the `src/fruitFly.js` class between lines `233` and `241`.   
 
-movement of swarm
-find smell concentration per fruit fly
-Automatically updated after each change of coordinates (see )
-best position (with regard to the function being optimised)
+A further modification concenred the calculation used to determine the initial position of the food. This did not appear to have been defined by Mitic, Vukovic, Petrovic and Miljkoiv (2015). It was assumed that the calculation would be the same one that had been used for the generation of the initial fruit fly position. The method that performs this calculation is called `generateFoodCoordinates` and it can be found within the `src/food.js` class between lines `44` and `55`.   
 
-calculate delta between best position and Swarm
-apply that delta to each fruit fly.
-
-The latter step wasn't explicity defined by Mitic, Vukovic, Petrovic and Miljkoiv (2015)
-
----
-
-Initial position of the food
-Used the same algorithm as per the fruit flies
-
-`fruitFly = lowerBound + (upperBound - lowerBound  * rand())`
-
-However, NUM FOOD - ISSUE
-
----
-
-### Q 4.c
-
-> What parameter values had to be inferred?
+Lastly, the alpha function, which contains the Chebyshev chaotic map, only accepts values between `-1` and `1`.
 
 Chaotic map
 - values between -1 and 1

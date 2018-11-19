@@ -1,4 +1,4 @@
-import { alpha } from './alpha';
+import { alpha, ALPHA_STARTING_VALUE } from './alpha';
 
 const BASE_TEN = 10;
 const ROOT_POWER = 0.5;
@@ -34,7 +34,7 @@ export class FruitFly {
    * @access public
    */
   get coordinates() {
-    return this._coordinates;
+    return Object.assign({}, this._coordinates);
   }
 
   /**
@@ -45,6 +45,16 @@ export class FruitFly {
    */
   get food() {
     return this._food;
+  }
+
+  /**
+   * @property hasSmellBeenCalculatedAtLeastOnce
+   * @type {bool}
+   * @description A flag representing whether or not the smell has been calculated.
+   * @access public
+   */
+  get hasSmellBeenCalculatedAtLeastOnce() {
+    return this._chaoticMapType;
   }
 
   /**
@@ -64,7 +74,7 @@ export class FruitFly {
    * @access public
    */
   get lastBestPosition() {
-    return this._lastBestPosition;
+    return Object.assign({}, this._lastBestPosition);
   }
 
   /**
@@ -125,6 +135,7 @@ export class FruitFly {
     this._searchSpaceUpperBound = searchSpaceUpperBound;
     this._chaoticMapType = chaoticMapType;
     this._chaoticMapDimension = chaoticMapDimension;
+    this._hasSmellBeenCalculatedAtLeastOnce = false;
 
     coordinates = coordinates === null ? this._generateStartingCoordinates() : coordinates;
     this._updateCoordinates(coordinates);
@@ -136,8 +147,6 @@ export class FruitFly {
   /**
    * Smell phase. Move the fruit fly with regard to
    * the 'bestPosition' and a random factor.
-   *
-   * @param {Food} food - An object representing the food.
    *
    * @returns {null}
    * @access public
@@ -151,30 +160,45 @@ export class FruitFly {
       x: xBest,
       y: yBest,
     } = this.lastBestPosition;
-
+    
     const {
       x: xCurrent,
       y: yCurrent,
     } = this.coordinates;
 
-    const xDelta = xCurrent - xBest;
-    const yDelta = yCurrent - yBest;
+    const xBestNormalised = parseInt(xBest, BASE_TEN) / upperBound;
+    const yBestNormalised = parseInt(yBest, BASE_TEN) / upperBound;
+    const xCurrentNormalised = parseInt(xCurrent, BASE_TEN) / upperBound;
+    const yCurrentNormalised = parseInt(yCurrent, BASE_TEN) / upperBound;
+    
+    const xDelta = xCurrentNormalised - xBestNormalised;
+    const yDelta = yCurrentNormalised - yBestNormalised;
 
-    let xAlpha = alpha(
-      xDelta,
-      this.chaoticMapType,
-      this.chaoticMapDimension,
-    );
+    let xDeltaByAlpha;
+    let yDeltaByAlpha;
 
-    let xUpdated = xAlpha + xCurrent;
+    if (this.hasSmellBeenCalculatedAtLeastOnce) {
+      xDeltaByAlpha = alpha(
+        xDelta,
+        this.chaoticMapType,
+        this.chaoticMapDimension
+      );
+    } else {
+      xDeltaByAlpha = xDelta * ALPHA_STARTING_VALUE;
+    }
 
-    let yAlpha = alpha(
-      yDelta,
-      this.chaoticMapType,
-      this.chaoticMapDimension,
-    );
-
-    let yUpdated = yAlpha + yCurrent;
+    if (this.hasSmellBeenCalculatedAtLeastOnce) {
+      yDeltaByAlpha = alpha(
+        yDelta,
+        this.chaoticMapType,
+        this.chaoticMapDimension
+      );
+    } else {
+      yDeltaByAlpha = yDelta * ALPHA_STARTING_VALUE;
+    }
+    
+    let xUpdated = parseInt(xCurrent, BASE_TEN) + xDeltaByAlpha;
+    let yUpdated = parseInt(yCurrent, BASE_TEN) + yDeltaByAlpha;
 
     // Enforce upper bound
     if (xUpdated > upperBound) {
@@ -216,6 +240,18 @@ export class FruitFly {
     });
   }
 
+  _generateLastBestFruitFly() {
+    return new FruitFly(
+      this.index,
+      this.food,
+      this.lastBestPosition,
+      this.searchSpaceLowerBound,
+      this.searchSpaceUpperBound,
+      this.chaoticMapType,
+      this.chaoticMapDimension,
+    );
+  }
+
   /**
    * A protected method that generates the starting coordinates of the FruitFly.
    *
@@ -250,15 +286,7 @@ export class FruitFly {
   }
 
   _updateLastBestPosition() {
-    const lastBestFruitFly = new FruitFly(
-      this.index,
-      this.lastBestPosition,
-      null,
-      this.searchSpaceLowerBound,
-      this.searchSpaceUpperBound,
-      this.chaoticMapType,
-      this.chaoticMapDimension,
-    );
+    const lastBestFruitFly = this._generateLastBestFruitFly();
 
     if (this.smellConcentration > lastBestFruitFly.smellConcentration) {
       this._lastBestPosition = this.coordinates;
@@ -272,6 +300,7 @@ export class FruitFly {
    */
   _updateSmellConcentration() {
     let smellConcentration;
+    
     const { coordinates } = this.food;
     const { x: xFood, y: yFood } = coordinates;
     const { x: xCurrent, y: yCurrent } = this.coordinates;
