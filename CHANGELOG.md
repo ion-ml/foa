@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.8.2
+
+- Refactor the `FruitFly` class to simplify the `smell` method.
+
+---
+
 ## 0.8.1
 
 - Inclusion of success criteria.

@@ -153,76 +153,21 @@ export class FruitFly {
    * @since 0.1
    */
   smell() {
-    const lowerBound = parseInt(this.searchSpaceLowerBound, BASE_TEN);
-    const upperBound = parseInt(this.searchSpaceUpperBound, BASE_TEN);
+    // For each coordinate (x, y) calculate the normalised delta
+    // between the current value and the best value.
+    const { xDelta, yDelta } = this._calculateNormailsedCoordinateDelta();
 
-    const {
-      x: xBest,
-      y: yBest,
-    } = this.lastBestPosition;
-    
-    const {
-      x: xCurrent,
-      y: yCurrent,
-    } = this.coordinates;
+    // Update each coordiante by alpha.
+    const xDeltaByAlpha = this._multiplyDeltaByAlpha(xDelta);
+    const yDeltaByAlpha = this._multiplyDeltaByAlpha(yDelta);
 
-    const xBestNormalised = parseInt(xBest, BASE_TEN) / upperBound;
-    const yBestNormalised = parseInt(yBest, BASE_TEN) / upperBound;
-    const xCurrentNormalised = parseInt(xCurrent, BASE_TEN) / upperBound;
-    const yCurrentNormalised = parseInt(yCurrent, BASE_TEN) / upperBound;
-    
-    const xDelta = xCurrentNormalised - xBestNormalised;
-    const yDelta = yCurrentNormalised - yBestNormalised;
-
-    let xDeltaByAlpha;
-    let yDeltaByAlpha;
-
-    if (this.hasSmellBeenCalculatedAtLeastOnce) {
-      xDeltaByAlpha = alpha(
-        xDelta,
-        this.chaoticMapType,
-        this.chaoticMapDimension
-      );
-    } else {
-      xDeltaByAlpha = xDelta * ALPHA_STARTING_VALUE;
-    }
-
-    if (this.hasSmellBeenCalculatedAtLeastOnce) {
-      yDeltaByAlpha = alpha(
-        yDelta,
-        this.chaoticMapType,
-        this.chaoticMapDimension
-      );
-    } else {
-      yDeltaByAlpha = yDelta * ALPHA_STARTING_VALUE;
-    }
-    
+    // For each coordinate, add 'deltaByAlpha' to the current value.
     let xUpdated = parseInt(xCurrent, BASE_TEN) + xDeltaByAlpha;
     let yUpdated = parseInt(yCurrent, BASE_TEN) + yDeltaByAlpha;
 
-    // Enforce upper bound
-    if (xUpdated > upperBound) {
-      xUpdated = upperBound;
-    }
-
-    // Enforce lower bound
-    if (xUpdated < lowerBound) {
-      xUpdated = lowerBound;
-    }
-
-    // Enforce upper bound
-    if (yUpdated > upperBound) {
-      yUpdated = upperBound;
-    }
-
-    // Enforce lower bound
-    if (yUpdated < lowerBound) {
-      yUpdated = lowerBound;
-    }
-
     const updatedCoordinates = {
-      x: xUpdated,
-      y: yUpdated,
+      x: this._cleanUpdatedCoordinate(xUpdated),
+      y: this._cleanUpdatedCoordinate(yUpdated),
     };
 
     this._updateCoordinates(
@@ -230,6 +175,16 @@ export class FruitFly {
     );
   }
 
+  /**
+   * @function transpose
+   *
+   * @description A public function that may be called to update the 
+   *              current fruitFly by the received delta.
+   *
+   * @param {Object<string, number>} delta - The change to be applied to the current coordinates.
+   * @returns {null}
+   * @access public
+   */
   transpose(delta) {
     const { x: xCurrent, y: yCurrent } = this.coordinates;
     const { x: xDelta, y: yDelta } = delta;
@@ -240,6 +195,127 @@ export class FruitFly {
     });
   }
 
+  /**
+   * @function _multiplyDeltaByAlpha
+   *
+   * @description A protected function that multiplies the received delta value by alpha.
+   *              Note that it uses ALPHA_STARTING_VALUE the first time that smell
+   *              concentration is calculated (per fruit fly).
+   *
+   * @param {number} delta - The differnce between the current and the best values for a single coordinate.
+   * @return {number} - delta multipled by alpha.
+   * @access protected
+   */
+  _multiplyDeltaByAlpha(delta) {
+    if (!this.hasSmellBeenCalculatedAtLeastOnce) {
+      
+      this._hasSmellBeenCalculatedAtLeastOnce = true;
+      // Initial alpha value of 0.7
+      return delta * ALPHA_STARTING_VALUE;
+    }
+
+    return alpha(
+      delta,
+      this.chaoticMapType,
+      this.chaoticMapDimension
+    );
+  }
+
+  /**
+   * @function _calculateNormalisedCoordinateDelta
+   *
+   * @description A protected function that returns a delta Object
+   *              containing the difference between normalised 
+   *              versions of the 'current' and the 'best'
+   *              coordinates (for the current fruit fly).
+   *
+   * @returns {Object<string, number>} - An object of x, y delta values.
+   * @access protected
+   */
+  _calculateNormalisedCoordinateDelta() {
+    const {
+      xBestNormalised,
+      xCurrentNormalised,
+      yBestNormalised,
+      yCurrentNormalised,
+    } = this._deriveNormalisedCopordinates(); 
+    
+    return {
+      xDelta: xCurrentNormalised - xBestNormalised,
+      yDelta: yCurrentNormalised - yBestNormalised,
+    };
+  }
+
+  /**
+   * @function _cleanUpdatedCoordinate
+   *
+   * @description A protected function that may be called to 
+   *              'clean' an updated coordinate with regard 
+   *              to the upper and lower bounds of the 
+   *              search space.
+   *
+   * @param {number} updatedCoordinate - The coordinate to be cleaned.
+   * @returns {number} - The cleaned coordinate.
+   * @access protected
+   */
+  _cleanUpdatedCoordinate(updatedCoordinate) {
+    const lowerBound = parseInt(this.searchSpaceLowerBound, BASE_TEN);
+    const upperBound = parseInt(this.searchSpaceUpperBound, BASE_TEN);
+    
+    let cleanedCoordinate = updatedCoordinate;
+
+    // Enforce upper bound
+    if (updatedCoordinate > upperBound) {
+      cleanedCoordiante = upperBound;
+    }
+
+    // Enforce lower bound
+    if (updatedCoordiante < lowerBound) {
+      cleanedCoordiante = lowerBound;
+    }
+
+    return cleanedCoordiante;
+  }
+
+  /**
+   * @function _deriveNormalisedCoordinates
+   *
+   * @description A protected function that may be called
+   *              to derive normalised versions of both
+   *              the 'current' and the 'best' coordinates. 
+   *
+   * @returns {Object<string, number>} - The normnalised coordinates.
+   * @access protected
+   */
+  _deriveNormalisedCoordinates() {
+    const {
+      x: xBest,
+      y: yBest,
+    } = this.lastBestPosition;
+    
+    const {
+      x: xCurrent,
+      y: yCurrent,
+    } = this.coordinates;
+
+    return {
+      xBestNormalised: parseInt(xBest, BASE_TEN) / upperBound,
+      yBestNormalised: parseInt(yBest, BASE_TEN) / upperBound,
+      xCurrentNormalised: parseInt(xCurrent, BASE_TEN) / upperBound,
+      yCurrentNormalised: parseInt(yCurrent, BASE_TEN) / upperBound,
+    };
+  }
+
+  /**
+   * @function _generateLastBestFruitFly
+   *
+   * @description A protected function that may be called
+   *              to return a FruitFly based upon the 
+   *              'last best position' coordinates.
+   *
+   * @returns {FruitFly} - A FruitFly based upon the 'last best position'.
+   * @access protected
+   */
   _generateLastBestFruitFly() {
     return new FruitFly(
       this.index,
@@ -248,7 +324,7 @@ export class FruitFly {
       this.searchSpaceLowerBound,
       this.searchSpaceUpperBound,
       this.chaoticMapType,
-      this.chaoticMapDimension,
+      this.chaoticMapDimension
     );
   }
 
@@ -285,6 +361,18 @@ export class FruitFly {
     this._updateSmellConcentration();
   }
 
+  /**
+   * @function _updateLastBestPosition
+   *
+   * @description A protected function that may be called to update
+   *              the 'last best position' coordinates. Only does
+   *              so when the 'smell concentration' associated with
+   *              the 'current fruit fly' is greater then the
+   *              'smell concentration' for the 'last best' fruit fly.
+   *
+   * @returns {null}
+   * @access protected
+   */
   _updateLastBestPosition() {
     const lastBestFruitFly = this._generateLastBestFruitFly();
 
