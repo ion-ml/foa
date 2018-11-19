@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.8.1
+
+- Inclusion of success criteria.
+- Additional answers.
+- Updated README.
+
+---
+
 ## 0.8.0
 
 - Additional answers.
