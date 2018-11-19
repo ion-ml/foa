@@ -6,7 +6,7 @@
 
 > Explain the inspiration, the main features and the expected function of the algorithm in words.
 
-The novel meta-heuristic optimisation Algorithm described within this assignment has been inspired by work by Mitic, Vukovic, Petrovic and Miljkoiv (2015), which concerned a Fruit Fly Optimisation algorithm.
+The novel metaheuristic optimisation algorithm described within this assignment has been inspired by Mitic, Vukovic, Petrovic and Miljkoiv (2015), whose paper concerned a Fruit Fly Optimisation algorithm.
 
 FOA algorithms model the movement of a swarm of fruit flies towards food. They do so with regard to the interactions between individual fruit flies and the swarm. Individual fruit flies can not see the food. However, they are able to smell the food.
 
@@ -33,7 +33,7 @@ In addition, the algorithm used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) 
 
 The main formulas used within the FOA algorithm by Mitic, Vukovic, Petrovic and Miljkoiv (2015) are as follows.
 
-The algorithm starts by randomly allocating the food and the fruit flies to positions within the search space. The random allocation of the food has not been defined, explicitly. However, the random allocations of the fruit fly position was defined. The definition calculates a pseudo random value based upon the pre-defined lower and upper bounds (of the search space).
+The algorithm starts by randomly allocating the food and the fruit flies to positions within the search space. The random allocation of the food was not defined, explicitly. However, the random allocation of the fruit fly positions was defined, and it calculates a pseudo random value based upon the lower and upper bounds of the search space.
 
 ```JavaScript
 // PSEUDO CODE
@@ -41,7 +41,7 @@ The algorithm starts by randomly allocating the food and the fruit flies to posi
 fruitFly = lowerBound + (upperBound - lowerBound  * rand());
 ```
 
-Within the smell phase, fruit flies are pseudo randomly re-positioned with regard to their previous best position. This is defined using the following formula:
+Within the smell phase, fruit flies are pseudo randomly re-positioned with regard to their previous best position and `alpha`, where `alpha` represents the output of the Chebyshev chaotic map. The re-positioning is defined using the following formula:
 
 ```JavaScript
 // PSEUDO CODE
@@ -49,7 +49,14 @@ Within the smell phase, fruit flies are pseudo randomly re-positioned with regar
 fruitFly (nextPosition) = fruitFly (currentPosition) + alpha(currentPosition - bestPosition);
 ```
 
-Within the vision phase, the smell concentration per fruit fly is defined by the inverse of the distance between the fruit fly and the food. Smell concentration increases as the distance between a given fruit fly and the food decreases. Conversely, smell concentration decreases as the distance between a given fruit fly and the food increases. 
+Within the vision phase, smell concentration per fruit fly is defined as the inverse of the distance between the fruit fly and the food. Smell concentration increases as the distance between a given fruit fly and the food decreases. Conversely, smell concentration decreases as the distance between a given fruit fly and the food increases. 
+
+```JavaScript
+// PSEUDO CODE
+
+distance = SQAURE_ROOT((fruitFly)SQUARED + (food)SQUARED);
+smellConcentration = 1 / distance;
+```
 
 Per iteration, the swarm moves toward the fruit fly with the maximum smell concentration. This process is defined by the following formula:
 
@@ -83,9 +90,9 @@ The parameters used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) for the Cheb
 
 > Explain your approach towards the reproduction of the algorithm of the paper:
 
-The approach taken to reproduce the algorithm described by Mitic, Vukovic, Petrovic and Miljkoiv (2015) was primarily motivated by portability. Consequently, the code associated with this assignment has been written in JavaScript. This means that it can be run within any web browser. Thus, potential problems that might have arisen had the algorithm have been written in a specific version of a language / specific operating system should have been avoided.
+The approach taken to reproduce the algorithm described by Mitic, Vukovic, Petrovic and Miljkoiv (2015) was motivated by portability. Consequently, the code associated with this assignment has been written in JavaScript. This means that it can be run within any web browser. Thus, potential compatibility problems that might have arisen had the algorithm been written in a specific server side language have been avoided.
 
-In order to load the algorithm into a browser navigate to `dist/index.html`, which displays a form containing fields representing the algorithm's parameters. The fields have default values for the Chebyshev chaotic map / Sum Squares combination. Modify the parameters as appropriate. Then click the `run` button beneath the form and the results should then be printed at the bottom of the page.
+In order to load the algorithm, open the following HTML page `dist/index.html` within a browser. The resulting page will display a form with fields representing the algorithm's parameters. The fields have default values for the Chebyshev chaotic map / Sum Squares combination. Modify the parameters as required. Then click the `run` button and the results should be printed at the bottom of the page.
 
 The JavaScript code contains a separate module for each of the algorithm's key components.
 - The `src/food.js` class defines the coordinates of the food.
@@ -106,21 +113,13 @@ Further information about how to load the algorithm (along with a description of
 
 > What simplifications or modifications had to be made?
 
-One simplification that was made concerns the calculation of the fruit fly with the best position. This calculation is made within the algorithm's vision phase. The pseudo code provided by Mitic, Vukovic, Petrovic and Miljkoiv (2015) indicates that the best positioned fruit fly would have the lowest smell concentration (with regard to the function being optimised). Smell concentration is the inverse of the distance between a fruit fly and the food. A fruit fly with the minimum smell concentration is the one furthest from the food. Consequently, the best position calculation was modified to find the maximum smell concentration with regard to the function being optimised. The method that performs this calculation is called `findBestPosition` and it can be found within the `src/fruitFlies.js` class between lines `108` and `124`.   
+One simplification that was made concerns the calculation of the fruit fly with the best position. This calculation is made within the algorithm's vision phase. The pseudo code provided by Mitic, Vukovic, Petrovic and Miljkoiv (2015) indicates that the best positioned fruit fly (at least for standard, rather than chaotic FOA) would have the lowest smell concentration (with regard to the function being optimised). Smell concentration is the inverse of the distance between a fruit fly and the food. A fruit fly with the minimum smell concentration is the one furthest from the food. Consequently, the best position calculation was modified to find the fruit fly with the maximum smell concentration (with regard to the function being optimised). The method that performs this calculation is called `findBestPosition` and it can be found within the `src/fruitFlies.js` class between lines `108` and `124`.   
 
-Another modification that had to be made concerns the movement of the swam. Per iteration, the swarm moves towards the fruit fly with the best position. It was assumed that the difference between the swarm's `n` and `n+1` positions should be applied to all of the fruit flies. The method that performs this calculation is called `transpose` and it can be found within the `src/fruitFly.js` class between lines `233` and `241`.   
+Another modification that was made concerns the movement of the swam. Per iteration, the swarm moves towards the fruit fly with the best position. It was assumed that the difference between the swarm's `n` and `n+1` positions should be applied to all of the fruit flies. The method that performs this calculation is called `transpose` and it can be found within the `src/fruitFly.js` class between lines `233` and `241`.   
 
-A further modification concenred the calculation used to determine the initial position of the food. This did not appear to have been defined by Mitic, Vukovic, Petrovic and Miljkoiv (2015). It was assumed that the calculation would be the same one that had been used for the generation of the initial fruit fly position. The method that performs this calculation is called `generateFoodCoordinates` and it can be found within the `src/food.js` class between lines `44` and `55`.   
+A further modification concerns the calculation used to determine the initial position of the food. This was not defined by Mitic, Vukovic, Petrovic and Miljkoiv (2015). However, it was assumed that the calculation would be identical to one used for the generation of the initial fruit fly positions. The method that performs this calculation is called `generateFoodCoordinates` and it can be found within the `src/food.js` class between lines `44` and `55`.
 
-Lastly, the alpha function, which contains the Chebyshev chaotic map, only accepts values between `-1` and `1`.
-
-Chaotic map
-- values between -1 and 1
-- JavaScript coordinates
-- Separate calls for x and y
-- See the smell function
-- subsequent limit
-- Addition of a cleaning step - values greater than 1 divided by the upper bound.
+Lastly, the `alpha` function, which contains the Chebyshev chaotic map, only accepts values between `-1` and `1`. However, the values being passed to `alpha` are the difference between the fruit fly's current and best positions. Consequently, the fruit fly's current and best positions are normalised (by dividing both of them by the upper bound of the search space).
 
 ---
 
