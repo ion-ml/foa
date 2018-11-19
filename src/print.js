@@ -52,7 +52,7 @@ export const printCsvResultsPerTrial = (trialResults, el, numTrials) => {
     el.append('\n');
     el.append(trialIndex);
     el.append(',');
-    el.append((currentDistance - bestDistance) <= (20 / 100)); 
+    el.append((currentDistance - bestDistance) <= (20 / 10000)); 
     el.append(',');
     el.append(bestDistance);
     el.append(',');
