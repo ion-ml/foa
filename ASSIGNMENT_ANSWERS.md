@@ -6,11 +6,11 @@
 
 > Explain the inspiration, the main features and the expected function of the algorithm in words.
 
-The novel metaheuristic optimisation algorithm described within this assignment has been inspired by Mitic, Vukovic, Petrovic and Miljkoiv (2015). , whose paper concerned a Fruit Fly Optimisation algorithm.
+The novel metaheuristic optimisation algorithm has been inspired by Mitic, Vukovic, Petrovic and Miljkoiv (2015), whose paper concerned Fruit Fly Optimisation algorithms (FOA).
 
-FOA algorithms model the movement of a swarm of fruit flies towards food. They do so with regard to the interactions between individual fruit flies and the swarm. Individual fruit flies can not see the food. However, they are able to smell the food.
+Conceptually, FOAs optimise target functions by minimising the distance between a swarm (with orbiting fruit flies)  food. Per iteration, FOAs perform such optimisation in two phases. Within the first of them, the smell phase, the concentration of the smell of food associated with each fruit fly is calculated. This is the inverse of the distance between each fruit fly and the food. Each fruit fly then moves towards it's own current or historical position with the greatest smell concentration.
 
-There are two main phases within FOA algorithms. In the first of them, the smell phase, the concentration of the smell of food associated with each fruit fly is calculated. The fruit flies closest to the location of the food should be associated with a greater smell concentrations. In the second phase, the vision phase, the swarm moves towards the fruit fly associated with the greatest smell concentration. After repeated iterations of the these phases the swarm should converge on the food.
+In the second phase, the vision phase, the swarm moves towards the fruit fly associated with the greatest smell concentration, as calculated by the function being optimised. After repeated iterations of the these phases the swarm should converge on the food.
 
 The main additional feature proposed by Mitic, Vukovic, Petrovic and Miljkoiv (2015) is the incorporation of randomness within the smell phase. They suggested that this will improve the speed (measured by number of iterations) with which the swarm converges upon the food and, thereby, optimises the required function. This appears to be a convincing argument. However, it might be the case that exploration is being favoured over exploitation. That is, there may be values for which the algorithm proposed by Mitic, Vukovic, Petrovic and Miljkoiv (2015) is not faster than a standard FOA.
 
@@ -22,7 +22,7 @@ The main additional feature proposed by Mitic, Vukovic, Petrovic and Miljkoiv (2
 
 The chosen algorithm used a Chebyshev chaotic map. Chaotic maps are functions that exhibit chaotic behaviour. more specifically, a Chebyshev chaotic map takes the cosine of the inverse cosine of a value. This produces results between -1 and 1. The Chebyshev chaotic map was found to be the most successful map used by Mitic, Vukovic, Petrovic and Miljkoiv (2015), which was why it was chosen to be reproduced within this assignment.
 
-In addition, the algorithm used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) optimised standard functions. One of the most successful was Sum of Squares, which has been used within this assignment.
+In addition, the algorithm used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) optimised a series of standard functions. One of the most successful was Sum of Squares, which has been used within this assignment.
 
 ---
 
@@ -44,7 +44,7 @@ fruitFly = lowerBound + (upperBound - lowerBound  * rand());
 Within the smell phase, fruit flies are pseudo randomly re-positioned with regard to their previous best position and `alpha`, where `alpha` represents the output of the Chebyshev chaotic map. The re-positioning is defined using the following formula:
 
 ```JavaScript
-// PSEUDO CODE
+// PSEUDO CODE: RE-POSITIONING FRUIT FLIES
 
 fruitFly (nextPosition) = fruitFly (currentPosition) + alpha(currentPosition - bestPosition);
 ```
@@ -52,18 +52,18 @@ fruitFly (nextPosition) = fruitFly (currentPosition) + alpha(currentPosition - b
 Within the vision phase, smell concentration per fruit fly is defined as the inverse of the distance between the fruit fly and the food. Smell concentration increases as the distance between a given fruit fly and the food decreases. Conversely, smell concentration decreases as the distance between a given fruit fly and the food increases. 
 
 ```JavaScript
-// PSEUDO CODE
+// PSEUDO CODE: CALCULATE DISTANCE
 
 distance = SQAURE_ROOT((fruitFly)SQUARED + (food)SQUARED);
 smellConcentration = 1 / distance;
 ```
 
-Per iteration, the swarm moves toward the fruit fly with the maximum smell concentration. This process is defined by the following formula:
+Per iteration, the swarm moves toward the fruit fly with the maximum smell concentration (with regard to the funciton being optimised) This process is defined by the following formula:
 
 ```JavaScript
-// PSEUDO CODE
+// PSEUDO CODE: CALCULATE BEST
 
-xBest = min (smellConcentration per fruit fly);
+best = min (smellConcentration per fruit fly);
 ```
 
 ---
@@ -72,9 +72,9 @@ xBest = min (smellConcentration per fruit fly);
 
 The parameters used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) for the Chebyshev chaotic map / Sum Squares algorithm are as follows:
 
-- Number of fruit flies = 30
-- Number of trials = 50
+- Number of fruit flies (orbiting the swarm) = 30
 - Iterations per trial = 700
+- Number of trials = 50
 - Search space lower bound = -10
 - Search space upper bound = 10
 
@@ -84,13 +84,18 @@ The parameters used by Mitic, Vukovic, Petrovic and Miljkoiv (2015) for the Cheb
 
 > Discuss the results given in the paper
 
+For the chosen algorithmic combination of Chebyshev chaotic maps and Sum of Squares, Mitic, Vukovic, Petrovic and Miljkoiv (2015) found (within their Figure 8) that the average distance between the swarm and the food (per iteration) decreased rapidly within the first (approximately) `10` iterations. This finding has been reproduced by the novel algorithm (as discussed in Question 6).
+
+For a batch of `50` trials, Mitic, Vukovic, Petrovic and Miljkoiv (2015) found that each one was successful. Thsi finding has not been produced by the novel algorithm. However, please see Question 4.d for further information about the benchmark criterion by the novel algorithm.
+
+
 ---
 
 ### Q 4.a
 
 > Explain your approach towards the reproduction of the algorithm of the paper:
 
-The approach taken to reproduce the algorithm described by Mitic, Vukovic, Petrovic and Miljkoiv (2015) was motivated by portability. Consequently, the code associated with this assignment has been written in JavaScript. This means that it can be run within any web browser. Thus, potential compatibility problems that might have arisen had the algorithm been written in a specific server side language have been avoided.
+The approach taken to reproduce the algorithm described by Mitic, Vukovic, Petrovic and Miljkoiv (2015) was motivated by portability. Consequently, the code associated with this assignment has been written in JavaScript. This means that it can be run within any JavaScript enabled web browser. Thus, potential compatibility problems that might have arisen had the algorithm been written in a specific server side language have been avoided.
 
 In order to load the algorithm, open the following HTML page `dist/index.html` within a browser. The resulting page will display a form with fields representing the algorithm's parameters. The fields have default values for the Chebyshev chaotic map / Sum Squares combination. Modify the parameters as required. Then click the `run` button and the results should be printed at the bottom of the page.
 
@@ -113,13 +118,13 @@ Further information about how to load the algorithm (along with a description of
 
 > What simplifications or modifications had to be made?
 
-One simplification that was made concerned the calculation of the fruit fly with the best position. This calculation is used within the algorithm's vision phase. The pseudo code provided by Mitic, Vukovic, Petrovic and Miljkoiv (2015) indicates that the best positioned fruit fly (at least for standard, rather than chaotic FOA) would have the lowest smell concentration (with regard to the function being optimised). Smell concentration is the inverse of the distance between a fruit fly and the food. A fruit fly with the minimum smell concentration would be the one furthest from the food. Consequently, the best position calculation was modified to find the fruit fly with the maximum smell concentration (with regard to the function being optimised). The method that performs this calculation is called `findBestPosition` and it can be found within the `src/fruitFlies.js` class between lines `108` and `124`.   
+One simplification that was made concerned the calculation of the fruit fly with the best position. This calculation is used within the algorithm's vision phase. The pseudo code provided by Mitic, Vukovic, Petrovic and Miljkoiv (2015) indicated that the best positioned fruit fly (at least for standard, rather than chaotic FOA) would have the lowest smell concentration (with regard to the function being optimised). Smell concentration is the inverse of the distance between a fruit fly and the food. A fruit fly with the minimum smell concentration would be the one furthest from the food. Consequently, the best position calculation was modified to find the fruit fly with the maximum smell concentration (with regard to the function being optimised). The method that performs this calculation is called `findBestPosition` and it can be found within the `src/fruitFlies.js` class between lines `108` and `124`.   
 
 Another modification that was made concerned the movement of the swarm. Per iteration, the swarm moves towards the fruit fly with the best position (as calculated by the function being optimised). It was assumed that the difference between the swarm's `n` and `n+1` positions should be applied to all of the fruit flies. The method that performs this calculation is called `transpose` and it can be found within the `src/fruitFly.js` class between lines `233` and `241`.   
 
 A further modification concerned the calculation used to determine the initial position of the food. This was not defined by Mitic, Vukovic, Petrovic and Miljkoiv (2015). However, it was assumed that the calculation would be identical to one used for the generation of the initial fruit fly positions. The method that performs this calculation is called `generateFoodCoordinates` and it can be found within the `src/food.js` class between lines `44` and `55`.
 
-Lastly, the `alpha` function, which contains the Chebyshev chaotic map, only accepts values between `-1` and `1`. However, the values being passed to `alpha` are the difference between the fruit fly's current and best positions. In the majority of cases, such positional values were greater than the `-1` to '1' boundary. Consequently, the fruit fly's current and best positions have been normalised (by dividing both of them by the upper bound of the search space). This is performed by the `smell` method within `src/fruitFly.js` between lines `155` and `231`.
+Lastly, the `alpha` function, which contains the Chebyshev chaotic map, only accepts values between `-1` and `1`. However, the values being passed to `alpha` are the difference between the fruit fly's current and best positions. In the majority of cases, the difference between such positional was greater than the expected range. Consequently, the fruit fly's current and best positions have been normalised (by dividing both of them by the upper bound of the search space) before the difference between them is calculated. This is performed by the `smell` method within `src/fruitFly.js` between lines `155` and `231`.
 
 ---
 
@@ -129,7 +134,7 @@ Lastly, the `alpha` function, which contains the Chebyshev chaotic map, only acc
 
 The benchmark function that will be used to access the success of the novel algorithm is a simplified version of the one used by Mitic, Vukovic, Petrovic and Miljkoiv (2015).
 
-The function being optimised, in this case the Sum of Squares, is used to calculate the `n + 1` position for the swarm (with regard to the positions of the fruit flies orbiting the swarm). The result of that calculation is described as the 'best position' for swarm (per iteration). The distance between the swarm (or the best position) and the food (at the end of a trial) is the dependent variable.
+The taregt function being optimised, in this case the Sum of Squares, is used to calculate the `n + 1` position for the swarm (with regard to the positions of the fruit flies orbiting the swarm). The result of that calculation is described as the 'best position' for the swarm (per iteration). The distance between the swarm (or the best position) and the food (at the end of a trial) is the dependent variable.
 
 *For further information, please see the `findBestPosition` method within the `fruitFlies.js` class.*
 
@@ -137,7 +142,7 @@ The adopted benchmark function thus examines whether or not the dependent variab
 
 Mitic, Vukovic, Petrovic and Miljkoiv (2015) adopted a 'relative' criterion, evaluating the dependent variable (per trial) with regard to the distance produced by the most successful trial (out of 50 trials).
 
-Given that the results from the novel algorithm were not as successful as expected (as described within Question 6) the use of such a 'relative' criterion was not considered to be appropriate. That is, if the 'relative' criteria has been used all of the results produced by the novel algorithm would have been classed as successful, when the majority were not.
+Given that the results from the novel algorithm were not as successful as expected (as described within Question 6) the use of such a 'relative' criterion was not considered to be appropriate. That is, if the 'relative' criteria had been used all of the results produced by the novel algorithm would have been classed as successful, when the majority were not.
 
 To that end, the adopted criterion examined whether or not the distance between the swarm and the food (at the end of each trial) when divided by the width of the search space (upper boundary - lower boundary) is equal to or less than `0.4`. Please see the pseudo code below for further information about the adopted criterion.
 
@@ -163,7 +168,7 @@ ES, GA, PSO, or ACO) that is similar (but obviously not identical) to your algor
 
 Particle Swarm Optimisation is a metaheuristic optomisation algorithm that has similarities to the Fruit Fly Optimisation algorithm associated with this assignment. Both are p-series or population based algorithms, meaning that the result is an emergent property of a movement within and forms of communication between populations of particles or fruit flies. On the other hand, they differ in a number of important aspects.
 
-Differences between PSO and FOA
+Differences between PSO and FOA - NOT complete.
 
 ---
 
@@ -276,4 +281,4 @@ Although the novel algorithm did not perform as expected, overall the results ar
 
 ---
 
-Please note that due to problematic family circumstances - my father has recently been diagnosed with Alzheimer's disease - I started this project only a couple of days prior to the deadline for submission. Consequently, I was unable to work on it with my designated partner. To that end, the work within this report and the associated JavaScript code-base are completely my own.
+Please note that due to problematic family circumstances - my father was diagnosed with Alzheimer's disease a little over a month ago and I have been caring for him - I started this project only a couple of days prior to the deadline for submission. Consequently, I was unable to work with my designated partner. To that end, the work within this report and the associated JavaScript code-base are completely my own.
