@@ -6,7 +6,7 @@
 
 > Explain the inspiration, the main features and the expected function of the algorithm in words.
 
-The novel metaheuristic optimisation algorithm described within this assignment has been inspired by Mitic, Vukovic, Petrovic and Miljkoiv (2015), whose paper concerned a Fruit Fly Optimisation algorithm.
+The novel metaheuristic optimisation algorithm described within this assignment has been inspired by Mitic, Vukovic, Petrovic and Miljkoiv (2015). , whose paper concerned a Fruit Fly Optimisation algorithm.
 
 FOA algorithms model the movement of a swarm of fruit flies towards food. They do so with regard to the interactions between individual fruit flies and the swarm. Individual fruit flies can not see the food. However, they are able to smell the food.
 
@@ -115,7 +115,7 @@ Further information about how to load the algorithm (along with a description of
 
 One simplification that was made concerned the calculation of the fruit fly with the best position. This calculation is used within the algorithm's vision phase. The pseudo code provided by Mitic, Vukovic, Petrovic and Miljkoiv (2015) indicates that the best positioned fruit fly (at least for standard, rather than chaotic FOA) would have the lowest smell concentration (with regard to the function being optimised). Smell concentration is the inverse of the distance between a fruit fly and the food. A fruit fly with the minimum smell concentration would be the one furthest from the food. Consequently, the best position calculation was modified to find the fruit fly with the maximum smell concentration (with regard to the function being optimised). The method that performs this calculation is called `findBestPosition` and it can be found within the `src/fruitFlies.js` class between lines `108` and `124`.   
 
-Another modification that was made concerned the movement of the swarm. Per iteration, the swarm moves towards the fruit fly with the best position. It was assumed that the difference between the swarm's `n` and `n+1` positions should be applied to all of the fruit flies. The method that performs this calculation is called `transpose` and it can be found within the `src/fruitFly.js` class between lines `233` and `241`.   
+Another modification that was made concerned the movement of the swarm. Per iteration, the swarm moves towards the fruit fly with the best position (as calculated by the function being optimised). It was assumed that the difference between the swarm's `n` and `n+1` positions should be applied to all of the fruit flies. The method that performs this calculation is called `transpose` and it can be found within the `src/fruitFly.js` class between lines `233` and `241`.   
 
 A further modification concerned the calculation used to determine the initial position of the food. This was not defined by Mitic, Vukovic, Petrovic and Miljkoiv (2015). However, it was assumed that the calculation would be identical to one used for the generation of the initial fruit fly positions. The method that performs this calculation is called `generateFoodCoordinates` and it can be found within the `src/food.js` class between lines `44` and `55`.
 
@@ -127,13 +127,39 @@ Lastly, the `alpha` function, which contains the Chebyshev chaotic map, only acc
 
 > What benchmark functions are you going to use and why?
 
+The benchmark function that will be used to access the success of the novel algorithm is a simplified version of the one used by Mitic, Vukovic, Petrovic and Miljkoiv (2015).
+
+The function being optimised, in this case the Sum of Squares, is used to calculate the `n + 1` position for the swarm (with regard to the positions of the fruit flies orbiting the swarm). The result of that calculation is described as the 'best position' for swarm (per iteration). The distance between the swarm (or the best position) and the food (at the end of a trial) is the dependent variable.
+
+*For further information, please see the `findBestPosition` method within the `fruitFlies.js` class.*
+
+The adopted benchmark function thus examines whether or not the dependent variable (at the end of a given trial) is equal to or less than a particular criterion.
+
+Mitic, Vukovic, Petrovic and Miljkoiv (2015) adopted a 'relative' criterion, evaluating the dependent variable (per trial) with regard to the distance produced by the most successful trial (out of 50 trials).
+
+Given that the results from the novel algorithm were not as successful as expected (as described within Question 6) the use of such a 'relative' criterion was not considered to be appropriate. That is, if the 'relative' criteria has been used all of the results produced by the novel algorithm would have been classed as successful, when the majority were not.
+
+To that end, the adopted criterion examined whether or not the distance between the swarm and the food (at the end of each trial) when divided by the width of the search space (upper boundary - lower boundary) is equal to or less than `0.4`. Please see the pseudo code below for further information about the adopted criterion.
+
+```JavaScript
+// PSEUDO CODE: BENCHMARK FUNCTION
+
+if ((distance / search_space_width) < 0.4) {
+  return 'success';
+} else {
+  return 'fail';
+}
+```
+
+`0.4` represents `2%` of the width of the search space (given that the lower bound is `-10` and the upper bound is `10`) and was considered to be reasonably stringent criterion.   
+
+
 ---
 
 ### Q5.
 
 > Choose one of the standard metaheuristic optimisation algorithms (such as SA,
 ES, GA, PSO, or ACO) that is similar (but obviously not identical) to your algorithm.
-Explain similarities and differences between your assigned algorithm and the standard algorithm that you have chosen.
 
 Particle Swarm Optimisation is a metaheuristic optomisation algorithm that has similarities to the Fruit Fly Optimisation algorithm associated with this assignment. Both are p-series or population based algorithms, meaning that the result is an emergent property of a movement within and forms of communication between populations of particles or fruit flies. On the other hand, they differ in a number of important aspects.
 
@@ -145,45 +171,78 @@ Differences between PSO and FOA
 
 > Present the results of your implementation of the algorithm, compare the results with corresponding results from the standard algorithm.
 
-Overview of results
+The novel version of the chaotic fruit fly optimisation algorithm was run for `50` trials. Each trial consisted of `700` iterations and `30` fruit flies, with a search space lower bound of `-10` and an upper bound of `10`.
 
-The novel version of the Fruit Fly Optimisation algorithm was run a single trial, which consisted of 300 iterations, with a search space lower bound of 0 and an upper bound of 100.
+As described in Question 4.d, the function being optimised, in this case the Sum of Squares, is used to calculate the `n + 1` position for the swarm (with regard to the positions of the fruit flies orbiting the swarm). The distance between the swarm and the food (at the end of a trial) is the dependent variable. When the dependent variable was evaluated using the benchmark function only `13` (or 26%) out of the `50` trials were successful.
 
-The dependent variable is … best position per iteration
-Distance
-Normalised
+The mean normalised distance between the swarm and the food at the end of each trial was `0.789` (3sf) with a standard deviation of `0.453` (3sf). The minimum was `0.005` (3sf) and the maximum was `1.295` (3sf), as can be seen within **Figure 1** below.
 
-Results
+#### Figure 1. Normalised distance between the best position and the food per trial.
 
-Initial period of exploration and then stagnation. No convergence
+![Normalised distance between the best position and the food per trial](./charts/final_best_position_distance_per_trial.png)
 
-The standard produced multiple oscillations -
+---
 
-CHART 1
+The data underlying **Figure 1** can be found within the codebase at `data/final_best_position_distance_per_trial.csv`, and the Python script used to produce the figure can be found at `scripts/final_best_position_distance_per_trial.py`. Lastly, a copy of the figure, itself, can be found within `charts/final_best_position_distance_per_trial.png`.
 
-Further investigated by examining the distance between the centre of the swarm and the fruit fly associated with the greatest concentration of smell.
-Diverged - middle of the trial
-Converged - 0
-Fruit flies - converged
+---
 
-This metric was not reported by the standard algorithm.
+The results can be further examined with regard to the most successful trial, number 37 out of 50. Within this trial, the normalised distance between the swarm and the food stagnated at a minimum value after approximately `10` iterations, as can be seen within **Figure 2** below.
 
-CHART 2
+The mean normalised distance between the swarm and the food per iteration (for trial number 37) was `0.092` (3sf) with a standard deviation of `0.469` (3sf). The minimum was `0.085` (3sf) and the maximum was `1.0`.
 
-Question 6.b Consider also scaling of the algorithms with respect to problem complexity
+#### Figure 2. Normalised distance between the best position and the food per iteration for trial number 37.
+
+![Normalised distance between the best position and the food per iteration for trial number 37](./charts/best_trial_distance_per_iteration.png)
+
+---
+
+The data underlying **Figure 2** can be found within the codebase at `data/best_trial_distance_per_iteration.csv`, and the Python script used to produce the figure can be found at `scripts/best_trial_distance_per_iteration.py`. Lastly, a copy of the figure can be found within `charts/best_trial_distance_per_iteration.png`.
+
+---
+
+In contrast, the least successful trial, number 22 out of 50, stagnated at a maximum after approximately 10 iterations, as can be seen within **Figure 3** below.
+
+The mean normalised distance between the swarm and the food per iteration (for trial number 22) was `0.994` (3sf) with a standard deviation of `0.059` (3sf). The minimum was `0.109` (3sf) and the maximum was `1.0`.
+
+#### Figure 3. Normalised distance between the best position and the food per iteration for trial number 22.
+
+![Normalised distance between the best position and the food per iteration for trial number 22](./charts/worst_trial_distance_per_iteration.png)
+
+---
+
+The data underlying **Figure 3** can be found within the codebase at `data/worst_trial_distance_per_iteration.csv`, and the Python script used to produce the figure can be found at `scripts/worst_trial_distance_per_iteration.py`. Lastly, a copy of the figure can be found within `charts/worst_trial_distance_per_iteration.png`.
+
+---
+
+The novel algorithm was run for a second time using the same parameters as above. That is, it was re-run for `50` trials. Each of the trials consisted of `700` iterations and `30` fruit flies, with a search space lower bound of `-10` and an upper bound of `10`. With regard to the distance between the swarm and the food, the resulting dataset contained all distances per iteration per trial. The mean standard deviation of the distances per iteration (across all trials) was `1.533` (3sf).
+
+When the first ten iterations were removed from the dataset describe above, the mean standard deviation of the distances across the remaining iterations (for all trials) decreased to `0.639` (3sf). The first ten iterations thus appear to have accounted for a majority of the standard deviation in the distance between the swarm and the food.
+
+This finding suggests that the majority of the trials were stagnating after approximately 10 iterations, and this suggestion will be discussed further in Question 7, below.
+
+---
+
+The results from the second set of trials can be found within `data/second_set_of_trials_all_distances_per_iterations.csv`, and the Python script used to produce the mean standard deviation values above can be found at `scripts/second_set_of_trials_all_distances_per_iterations.py`.
 
 
 ---
 
-### Q7a.i
+### Q7a
 
 > Discuss here question such as: Did your algorithms perform as expected? If not, why not? If yes, why did the algorithms perform as it did?
 
----
+Unfortunately, the novel algorithm did not perform as expected with only 26% of the trials proving to be successful.
 
-### Q7.a.ii
+The findings from the second run of the novel algorithm suggested that the first ten iterations of the algorithm (across all trials) appeared to account for a majority of the standard deviations in the distance between the swarm and the food. Consequently, the majority of the trials appear to have found local rather than global maxima, because there was little or no change after approximately 10 iterations.
 
-> Why did the algorithms perform as it did?
+It is suggested that the problem described above may have been caused by erroneous normalisation of the values passed to alpha (from within the `fruitFly.js` class). Per iteration, each fruit fly should reposition itself within the search space, and it should do so regard to alpha, along with the fruit fly's current and previously best positions. Alpha values are derived from a Chebyshev chaotic map, which returns a maximum value of `6.1232e-17` when it's input is `0`. However, the chaotic map only accepts inputs between `-1` and `1`.
+
+To ensure that the chaotic map would always receive values in the correct range, the inputs were normalised (see lines `169` to `172` within the `fruitFly.js` class). As a consequence of such normalisation, the `src/fruitFly.js` class will have called the chaotic map with inputs close to zero, which will have produced large values for alpha. In turn, such large alpha values may have forced the fruit flies to move towards the boundaries of the search space, causing stagnation.
+
+The suggestion has been supported by a re-inspection of the data for the best and worst trials (`data/best_trial_distance_per_iteration.csv` and `data/worst_trial_distance_per_iteration.csv`, respectively), which suggests that once fruit flies find themselves at the edge of the search space they are unlikely to be pushed back towards the centre.
+
+In summary, the relatively poor performance of the novel algorithm may have been caused by erroneous normalisation within the `src/fruitFly.js` class.
 
 ---
 
@@ -191,12 +250,11 @@ Question 6.b Consider also scaling of the algorithms with respect to problem com
 
 > What could have been improved if there was one more week (or one more year) to work on the problem?
 
-There are a number of improvements that could have been made if there had been additional time to work on the problem. With regard to the interpretation of the results produced from the JavaScript algorithm, being able to directly visualise them (perhaps using a graphics library such as D3) would have been beneficial. 
-In addition, the code was written using the ES6 version of JavaScript, because that iteration of the language contains a number of useful features, such as array maps and class definitions not present in earlier versions. Unfortunately, not all browsers currently support ES6. Thus, a build step was introduced to transpire the ES6 code into ES5. In retrospect, it might have been simpler to have avoided this addition build step.
+One of the key improvements that could have been made would have been to replace the current Cartesian positioning with matrix and vector manipulations, which might have simplified the code. Unfortunately, matrix and vector manipulation functions are not available by within the core JavaScript language, but a library such [math.js](http://mathjs.org/docs/datatypes/matrices.html) could be introduced.  
 
-Another improvement that could be made if there was additional time would be to use Common JS module definitions, rather than ES6 module definitions.  Such definitions provide a means of separate JavaScript scripts importing and exporting information between one another. However, the base ES6 definitions do not run directly on command line JavaScript environment such as Node. Being able to do so would make test an using the algorithm easier, than otherwise. 
+Another improvement that could have been made relates to the interpretation of the results produced from the novel algorithm. It would be advantageous to be able to directly visualise them within the web page (perhaps using a graphics library such as D3). 
 
-With regard to the speed of running the JavaScript based algorithm within a browser, the code could be cross-compiled into Low Level JavaScript or Web Assembly, both of which claim to provide near C speeds of code interpretation. Doing so would be another means of making the algorithm easier than otherwise to use.
+With regard to the speed of running the JavaScript based algorithm within a web browser, the code could be cross-compiled into [Low Level JavaScript](https://github.com/mbebenita/LLJS) or [Web Assembly](https://webassembly.org/), both of which aim to provide near C speeds of code interpretation.
 
 ---
 
@@ -205,6 +263,8 @@ With regard to the speed of running the JavaScript based algorithm within a brow
 
 > How general are the results?  
 
+The results are portable having been written in JavaScript and designed to run in any JavaScript enabled web browser. Less positively, the novel algorithm's code uses Cartesian positioning with two fixed dimensions. Attempting to use the novel algorithm to optimise a function with more than two dimension would require a significant re-write. Thus, while the novel algorithm is portable, it may not be very general, having been written to optimise functions with only two dimensions.
+
 ---
 
 
@@ -212,3 +272,8 @@ With regard to the speed of running the JavaScript based algorithm within a brow
 
 > How (or how not) to interpret the results
 
+Although the novel algorithm did not perform as expected, overall the results are positive. A portable JavaScript based implementation of a FOA has been produced, and it may not require much further work to fully reproduce the findings of Mitic, Vukovic, Petrovic and Miljkoiv (2015).
+
+---
+
+Please note that due to problematic family circumstances - my father has recently been diagnosed with Alzheimer's disease - I started this project only a couple of days prior to the deadline for submission. Consequently, I was unable to work on it with my designated partner. To that end, the work within this report and the associated JavaScript code-base are completely my own.

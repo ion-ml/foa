@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.9.0
+
+- Almost complete write up.
+- Revised print routines.
+- Intriduction of `charts`, `data` and `scripts`.
+
+---
+
 ## 0.8.3 -> 4
 
 - Fixed

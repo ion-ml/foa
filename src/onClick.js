@@ -22,6 +22,6 @@ export const onClick = (e) => {
   foa.printCsvResultsPerTrial(
     trialResults,
     el,
-    numIterations
+    numTrials
   );
 };
